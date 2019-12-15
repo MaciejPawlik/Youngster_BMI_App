@@ -1,0 +1,8 @@
+<resources>
+	<string name="app_name">Youngster_BMI_App</string>
+    <string name="Płeć">Gender</string>
+    <string name="gender">Płeć</string>
+    <string name="GIRL">Dziewczynka</string>
+    <string name="BOY">Chłopiec</string>
+    <string name="go">Wylicz</string>
+</resources>
