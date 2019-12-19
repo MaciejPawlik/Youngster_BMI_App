@@ -2,7 +2,16 @@
 	<string name="app_name">Youngster_BMI_App</string>
     <string name="Płeć">Gender</string>
     <string name="gender">Płeć</string>
-    <string name="GIRL">Dziewczynka</string>
-    <string name="BOY">Chłopiec</string>
+    <string name="Girl">Dziewczynka</string>
+    <string name="GIRL">GIRL</string>
+    <string name="Boy">Chłopiec</string>
+    <string name="BOY">BOY</string>
     <string name="go">Wylicz</string>
+    <string name="year">Lat</string>
+    <string name="month">Miesięcy</string>
+    <string name="weight">Waga</string>
+    <string name="height">Wzrost</string>
+    <string name="centileWeight">Centyl waga</string>
+    <string name="centileHeight">Centyl wzrost</string>
+    <string name="centileBmi">Centyl BMI</string>
 </resources>
