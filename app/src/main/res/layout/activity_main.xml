@@ -22,6 +22,7 @@
 				android:text="@string/Girl"
 				android:hint="@string/GIRL"
 				android:layout_width="wrap_content"
+				android:checked="true"
 				android:layout_height="wrap_content" android:id="@+id/GIRL" android:layout_weight="1"/>
 		<RadioButton
 				android:text="@string/Boy"
@@ -81,21 +82,24 @@
 			android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/weight"
 			app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.5"/>
 	<TextView
-			android:text="@string/centileWeight"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/centileWeight" android:layout_marginTop="16dp"
+			android:id="@+id/BMI" android:layout_marginTop="16dp"
 			app:layout_constraintTop_toBottomOf="@+id/button" app:layout_constraintStart_toStartOf="parent"
 			android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
 	<TextView
-			android:text="@string/centileHeight"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/centileWeight" android:layout_marginTop="16dp"
+			app:layout_constraintTop_toBottomOf="@+id/BMI" app:layout_constraintStart_toStartOf="parent"
+			android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
+	<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/centileHeight" android:layout_marginTop="16dp"
 			app:layout_constraintTop_toBottomOf="@+id/centileWeight" app:layout_constraintStart_toStartOf="parent"
 			android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
 	<TextView
-			android:text="@string/centileBmi"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/centileBmi" android:layout_marginTop="16dp"

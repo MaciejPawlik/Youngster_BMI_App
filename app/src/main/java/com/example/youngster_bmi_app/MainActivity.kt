@@ -1,17 +1,16 @@
 package com.example.youngster_bmi_app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
 import com.example.youngster_bmi_app.centile.Standard
 import com.example.youngster_bmi_app.centile.Type
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
@@ -25,41 +24,57 @@ class MainActivity : AppCompatActivity() {
         val standards = getCentiles()
         val pickedRadioGenderId = findViewById<RadioGroup>(R.id.gender).checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
-        val months = findViewById<EditText>(R.id.month).text.toString().toInt()
-        val weight = findViewById<EditText>(R.id.weight).text.toString().toDouble()
-        val height = findViewById<EditText>(R.id.height).text.toString().toDouble()
+        val monthsText = findViewById<EditText>(R.id.month).text.toString()
+        val yearsText = findViewById<EditText>(R.id.year).text.toString()
+        val weightText = findViewById<EditText>(R.id.weight).text.toString()
+        val heightText = findViewById<EditText>(R.id.height).text.toString()
+        val months = if (monthsText.isNotEmpty()) monthsText.toInt() else 0
+        val years = if (yearsText.isNotEmpty()) yearsText.toInt() else 0
+        val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
+        val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.0
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
-        val results = findCentile(standards, gender, months, weight, height)
+        val bmi = getBmi(weight, height)
+        val results = findCentile(standards, gender, years * 12 + months, weight, height, bmi)
+        val bmiValue = findViewById<TextView>(R.id.BMI).apply {
+            text = ("BMI: ").plus("%.2f".format(bmi))
+        }
         val centileWeight = findViewById<TextView>(R.id.centileWeight).apply {
-            text = text.toString().plus(": ").plus(results[Type.WEIGHT].toString())
+            text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
         }
         val centileHeight = findViewById<TextView>(R.id.centileHeight).apply {
-            text = text.toString().plus(": ").plus(results[Type.HEIGHT].toString())
+            text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
         }
         val centileBmi = findViewById<TextView>(R.id.centileBmi).apply {
-            text = text.toString().plus(": ").plus(results[Type.BMI].toString())
+            text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
         }
     }
 
-    fun findCentile(standardData: List<Standard>, gender: Gender, age: Int, weight: Double, height: Double): Map<Type, Int> {
+    private fun getResult(result: Int): String {
+        return if (result > -1) result.toString() else "brak danych dla tego wieku"
+    }
+
+    private fun findCentile(standardData: List<Standard>, gender: Gender, age: Int, weight: Double, height: Double, bmi: Double): Map<Type, Int> {
         val typeToCentile = mutableMapOf(Type.WEIGHT to -1, Type.HEIGHT to -1, Type.BMI to -1)
 
         val standards = standardData.filter { it.gender == gender && it.age == age }
 
         if (standards.isNotEmpty()) {
-            val bmi = weight / (height / 100).pow(2.0)
             val typeToValue = mapOf(Type.WEIGHT to weight, Type.HEIGHT to height, Type.BMI to bmi)
             standards.forEach { typeToCentile[it.type] = getPercentile(it.centiles, typeToValue[it.type]!!) }
         }
         return typeToCentile
     }
 
-    fun getPercentile(centiles: List<Centile>, value: Double) : Int {
+    private fun getPercentile(centiles: List<Centile>, value: Double) : Int {
         val centile = centiles.lastOrNull { it.value <= value }
         return centile?.percentile ?: 1
     }
 
-    fun getCentiles(): List<Standard> {
+    private fun getBmi(weight: Double, height: Double): Double {
+        return weight / (height / 100).pow(2.0)
+    }
+
+    private fun getCentiles(): List<Standard> {
         val centiles = mutableListOf<Standard>()
         val reader = applicationContext.assets.open("centiles.csv").bufferedReader().readLines()
         for (line in reader) {

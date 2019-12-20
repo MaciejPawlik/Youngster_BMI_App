@@ -14,4 +14,5 @@
     <string name="centileWeight">Centyl waga</string>
     <string name="centileHeight">Centyl wzrost</string>
     <string name="centileBmi">Centyl BMI</string>
+    <string name="BMI">BMI</string>
 </resources>
