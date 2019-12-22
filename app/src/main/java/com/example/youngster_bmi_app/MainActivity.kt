@@ -2,10 +2,7 @@ package com.example.youngster_bmi_app
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
@@ -18,20 +15,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val year = findViewById<Spinner>(R.id.year)
+        ArrayAdapter.createFromResource(this, R.array.year_array, android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            year.adapter = adapter
+        }
+        val month = findViewById<Spinner>(R.id.month)
+        ArrayAdapter.createFromResource(this, R.array.month_array, android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            month.adapter = adapter
+        }
     }
 
     fun actionCentile(view: View) {
         val standards = getCentiles()
         val pickedRadioGenderId = findViewById<RadioGroup>(R.id.gender).checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
-        val monthsText = findViewById<EditText>(R.id.month).text.toString()
-        val yearsText = findViewById<EditText>(R.id.year).text.toString()
+        val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
+        val years = findViewById<Spinner>(R.id.year).selectedItem.toString().toInt()
         val weightText = findViewById<EditText>(R.id.weight).text.toString()
         val heightText = findViewById<EditText>(R.id.height).text.toString()
-        val months = if (monthsText.isNotEmpty()) monthsText.toInt() else 0
-        val years = if (yearsText.isNotEmpty()) yearsText.toInt() else 0
         val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
-        val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.0
+        val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.1 // to avoid dividing by 0 in BMI
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
         val bmi = getBmi(weight, height)
         val results = findCentile(standards, gender, years * 12 + months, weight, height, bmi)
