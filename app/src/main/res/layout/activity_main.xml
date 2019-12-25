@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
-        >
+        android:id="@+id/main">
 
     <RadioGroup
             android:text="@string/gender"
@@ -45,7 +45,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
             android:layout_width="379dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
@@ -54,46 +54,66 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/gender"
-            android:id="@+id/linearLayout2">
+            android:id="@+id/linearLayoutBirth">
 
         <TextView
-                android:text="@string/labelAge"
+                android:text="@string/labelBirthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/labelAge"
-                android:baselineAligned="false"
+                android:id="@+id/textView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/year"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintEnd_toStartOf="@+id/pickedDate"/>
 
-        <Spinner
+        <TextView
+                android:text="@string/initialBirthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/year"
-                app:layout_constraintStart_toEndOf="@+id/labelAge"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintEnd_toStartOf="@+id/month"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/month"
+                android:id="@+id/pickedDate"
                 android:baselineAligned="false"
-                app:layout_constraintStart_toEndOf="@+id/year"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/datePicker"/>
+
+        <Button
+                android:text="@string/changeBirhtDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePicker"
+                android:onClick="showDatePickerDialog"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/pickedDate"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutAge"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBirth"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/age"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -106,7 +126,7 @@
             android:inputType="numberDecimal"
             android:id="@+id/weight"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAge"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="16dp"
@@ -121,7 +141,7 @@
             android:inputType="numberDecimal"
             android:id="@+id/height"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutAge"
             app:layout_constraintStart_toEndOf="@+id/weight"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
@@ -132,7 +152,7 @@
     <Button
             android:text="@string/go"
             android:layout_width="wrap_content"
-            android:layout_height="46dp"
+            android:layout_height="wrap_content"
             android:id="@+id/button"
             android:onClick="actionCentile"
             android:layout_marginTop="16dp"
