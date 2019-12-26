@@ -2,18 +2,15 @@ package com.example.youngster_bmi_app
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
 import com.example.youngster_bmi_app.centile.Standard
 import com.example.youngster_bmi_app.centile.Type
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -22,24 +19,49 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val year = findViewById<Spinner>(R.id.year)
+        ArrayAdapter.createFromResource(this, R.array.year_array, android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            year.adapter = adapter
+        }
+        val month = findViewById<Spinner>(R.id.month)
+        ArrayAdapter.createFromResource(this, R.array.month_array, android.R.layout.simple_spinner_dropdown_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            month.adapter = adapter
+        }
+    }
+
+    fun toggleAgeInput(view: View) {
+        val birth = findViewById<ConstraintLayout>(R.id.linearLayoutBirth)
+        val birthVisibility = birth.visibility
+        val age = findViewById<ConstraintLayout>(R.id.linearLayoutAge)
+        val ageVisibility = age.visibility
+        birth.visibility = ageVisibility
+        age.visibility = birthVisibility
     }
 
     fun actionCentile(view: View) {
         val standards = getCentiles()
         val pickedRadioGenderId = findViewById<RadioGroup>(R.id.gender).checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
-        val birthDate = findViewById<TextView>(R.id.pickedDate).text.toString()
-        val months = countMonths(birthDate)
+        val age = if (findViewById<RadioButton>(R.id.monthYears).isChecked) {
+            val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
+            val years = findViewById<Spinner>(R.id.year).selectedItem.toString().toInt()
+            years * 12 + months
+        } else {
+            countMonths()
+        }
         val weightText = findViewById<EditText>(R.id.weight).text.toString()
         val heightText = findViewById<EditText>(R.id.height).text.toString()
         val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
         val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.1 // to avoid dividing by 0 in BMI
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
         val bmi = getBmi(weight, height)
-        val results = findCentile(standards, gender, months, weight, height, bmi)
-        val ageValue = findViewById<TextView>(R.id.age).apply {
-            text = ("Wiek: ").plus(formatAge(months))
-        }
+        val results = findCentile(standards, gender, age, weight, height, bmi)
+
         val bmiValue = findViewById<TextView>(R.id.BMI).apply {
             text = ("BMI: ").plus("%.2f".format(bmi))
         }
@@ -54,28 +76,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun countMonths(date: String): Int {
+    private fun countMonths(): Int {
+        val date = findViewById<TextView>(R.id.pickedDate).text.toString()
         val birthDate = SimpleDateFormat("dd.MM.yyyy").parse(date).time
         val days = Date().time.minus(birthDate) / (1000 * 3600 * 24)
         return (days / 30.5f).roundToInt()
-    }
-
-    private fun formatAge(months: Int): String {
-        val years = floor(months.toDouble() / 12).toInt()
-        val months = months.rem(12)
-        val yearsFormatted = when (years) {
-            0 -> { "" }
-            1 -> { "Rok" }
-            in 2..4 -> { years.toString().plus(" lata") }
-            else -> {years.toString().plus(" lat")}
-        }
-        val monthsFormatted = when (months) {
-            0 -> { "" }
-            1 -> { "miesiąc" }
-            in 2..4 -> { months.toString().plus(" miesiące") }
-            else -> {months.toString().plus(" miesięcy")}
-        }
-        return yearsFormatted.plus(if (months > 0 && years > 0) " i " else "").plus(monthsFormatted)
     }
 
     private fun getResult(result: Int): String {
