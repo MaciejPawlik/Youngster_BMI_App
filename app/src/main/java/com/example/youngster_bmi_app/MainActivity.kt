@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.addTextChangedListener
 import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
 import com.example.youngster_bmi_app.centile.Standard
@@ -19,7 +20,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        updateSpinners()
+        addListeners()
+    }
 
+    private fun updateSpinners() {
         val year = findViewById<Spinner>(R.id.year)
         ArrayAdapter.createFromResource(this, R.array.year_array, android.R.layout.simple_spinner_dropdown_item
         ).also { adapter ->
@@ -32,6 +37,38 @@ class MainActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             month.adapter = adapter
         }
+        year.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                goToRecalculation()
+            }
+        }
+        month.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                goToRecalculation()
+            }
+        }
+    }
+
+    private fun addListeners() {
+        findViewById<RadioGroup>(R.id.genderRadioGroup).setOnCheckedChangeListener { group, checkedId -> goToRecalculation() }
+        findViewById<RadioGroup>(R.id.ageRadioGroup).setOnCheckedChangeListener { group, checkedId -> goToRecalculation() }
+        findViewById<EditText>(R.id.weight).addTextChangedListener { goToRecalculation() }
+        findViewById<EditText>(R.id.height).addTextChangedListener { goToRecalculation() }
+        findViewById<TextView>(R.id.pickedDate).addTextChangedListener { goToRecalculation() }
+    }
+
+    private fun goToRecalculation() {
+        val calculateButton = findViewById<Button>(R.id.calculate)
+        if (calculateButton.visibility == View.GONE) {
+            findViewById<Button>(R.id.save).visibility = View.GONE
+            calculateButton.visibility = View.VISIBLE
+        }
     }
 
     fun toggleAgeInput(view: View) {
@@ -43,9 +80,9 @@ class MainActivity : AppCompatActivity() {
         age.visibility = birthVisibility
     }
 
-    fun actionCentile(view: View) {
+    fun calculateCentile(view: View) {
         val standards = getCentiles()
-        val pickedRadioGenderId = findViewById<RadioGroup>(R.id.gender).checkedRadioButtonId
+        val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
         val age = if (findViewById<RadioButton>(R.id.monthYears).isChecked) {
             val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
@@ -74,6 +111,8 @@ class MainActivity : AppCompatActivity() {
         val centileBmi = findViewById<TextView>(R.id.centileBmi).apply {
             text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
         }
+        findViewById<Button>(R.id.calculate).visibility = View.GONE
+        findViewById<Button>(R.id.save).visibility = View.VISIBLE
     }
 
     private fun countMonths(): Int {
