@@ -295,6 +295,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/save"
+            android:onClick="saveResults"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/centileBmi"
             android:layout_marginLeft="16dp"

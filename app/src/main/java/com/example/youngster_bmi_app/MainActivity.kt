@@ -1,8 +1,11 @@
 package com.example.youngster_bmi_app
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
@@ -10,6 +13,7 @@ import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
 import com.example.youngster_bmi_app.centile.Standard
 import com.example.youngster_bmi_app.centile.Type
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.pow
@@ -84,13 +88,7 @@ class MainActivity : AppCompatActivity() {
         val standards = getCentiles()
         val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
-        val age = if (findViewById<RadioButton>(R.id.monthYears).isChecked) {
-            val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
-            val years = findViewById<Spinner>(R.id.year).selectedItem.toString().toInt()
-            years * 12 + months
-        } else {
-            countMonths()
-        }
+        val age = getAge()
         val weightText = findViewById<EditText>(R.id.weight).text.toString()
         val heightText = findViewById<EditText>(R.id.height).text.toString()
         val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
@@ -113,13 +111,27 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.calculate).visibility = View.GONE
         findViewById<Button>(R.id.save).visibility = View.VISIBLE
+        closeKeyboard(view)
+    }
+
+    private fun closeKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun getAge(): Int = if (findViewById<RadioButton>(R.id.monthYears).isChecked) {
+        val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
+        val years = findViewById<Spinner>(R.id.year).selectedItem.toString().toInt()
+        years * 12 + months
+    } else {
+        countMonths()
     }
 
     private fun countMonths(): Int {
         val date = findViewById<TextView>(R.id.pickedDate).text.toString()
         val birthDate = SimpleDateFormat("dd.MM.yyyy").parse(date).time
         val days = Date().time.minus(birthDate) / (1000 * 3600 * 24)
-        return (days / 30.5f).roundToInt()
+        return (days / 30.5f).roundToInt() // average days in months
     }
 
     private fun getResult(result: Int): String {
@@ -149,8 +161,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCentiles(): List<Standard> {
         val centiles = mutableListOf<Standard>()
-        val reader = applicationContext.assets.open("centiles.csv").bufferedReader().readLines()
-        for (line in reader) {
+        val reader = applicationContext.assets.open("centiles.csv").bufferedReader()
+        for (line in reader.readLines()) {
             val dataField = line.split(",")
             centiles.add(
                 Standard(
@@ -175,7 +187,41 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+        reader.close()
         return centiles
+    }
+
+    fun saveResults(view: View) {
+        val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR).toString()
+        val month = if (c.get(Calendar.MONTH) + 1 > 9) c.get(Calendar.MONTH).toString() else "0".plus(c.get(Calendar.MONTH).toString())
+        val day = if (c.get(Calendar.DAY_OF_MONTH) > 9) c.get(Calendar.DAY_OF_MONTH).toString() else "0".plus(c.get(Calendar.DAY_OF_MONTH).toString())
+        val separator = "."
+        val results = arrayOf(
+            findViewById<RadioButton>(pickedRadioGenderId).hint.toString(),
+            getAge().toString(),
+            findViewById<EditText>(R.id.childName).text.toString(),
+            year.plus(separator).plus(month).plus(separator).plus(day),
+            findViewById<EditText>(R.id.weight).text.toString(),
+            findViewById<EditText>(R.id.height).text.toString()
+            )
+
+        try {
+            writeToFile(results)
+            findViewById<Button>(R.id.save).visibility = View.GONE
+            closeKeyboard(view)
+            Toast.makeText(applicationContext, "Zapisano wyniki", LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Toast.makeText(applicationContext, "Błąd zapisu wyników", LENGTH_SHORT).show()
+        }
+    }
+
+    private fun writeToFile(results: Array<String>) {
+        val writer = applicationContext.openFileOutput("results.csv", Context.MODE_APPEND)
+            .writer()
+            .append(results.joinToString(","))
+        writer.close()
     }
 
     fun showDatePickerDialog(v: View) {
