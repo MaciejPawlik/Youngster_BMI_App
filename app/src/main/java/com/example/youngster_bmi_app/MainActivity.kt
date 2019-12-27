@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         updateSpinners()
         addListeners()
+        readLastInputs()
     }
 
     private fun updateSpinners() {
@@ -76,6 +77,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleAgeInput(view: View) {
+        switchAgeInput()
+    }
+
+    private fun switchAgeInput() {
         val birth = findViewById<ConstraintLayout>(R.id.linearLayoutBirth)
         val birthVisibility = birth.visibility
         val age = findViewById<ConstraintLayout>(R.id.linearLayoutAge)
@@ -97,21 +102,43 @@ class MainActivity : AppCompatActivity() {
         val bmi = getBmi(weight, height)
         val results = findCentile(standards, gender, age, weight, height, bmi)
 
-        val bmiValue = findViewById<TextView>(R.id.BMI).apply {
-            text = ("BMI: ").plus("%.2f".format(bmi))
-        }
-        val centileWeight = findViewById<TextView>(R.id.centileWeight).apply {
-            text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
-        }
-        val centileHeight = findViewById<TextView>(R.id.centileHeight).apply {
-            text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
-        }
-        val centileBmi = findViewById<TextView>(R.id.centileBmi).apply {
-            text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
-        }
+        findViewById<TextView>(R.id.BMI).text = ("BMI: ").plus("%.2f".format(bmi))
+        findViewById<TextView>(R.id.centileWeight).text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
+        findViewById<TextView>(R.id.centileHeight).text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
+        findViewById<TextView>(R.id.centileBmi).text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
+        saveInputs()
         findViewById<Button>(R.id.calculate).visibility = View.GONE
         findViewById<Button>(R.id.save).visibility = View.VISIBLE
         closeKeyboard(view)
+    }
+
+    private fun readLastInputs() {
+        val inputs = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        findViewById<RadioGroup>(R.id.genderRadioGroup).check(inputs.getInt(R.id.genderRadioGroup.toString(), findViewById<RadioButton>(R.id.GIRL).id))
+        findViewById<RadioGroup>(R.id.ageRadioGroup).check(inputs.getInt(R.id.ageRadioGroup.toString(), findViewById<RadioButton>(R.id.monthYears).id))
+        findViewById<EditText>(R.id.childName).setText(inputs.getString(R.id.childName.toString(), ""))
+        if (inputs.getInt(R.id.ageRadioGroup.toString(), 0) == findViewById<RadioButton>(R.id.birthDate).id) {
+            switchAgeInput()
+            findViewById<TextView>(R.id.pickedDate).text = inputs.getString(R.id.pickedDate.toString(), "")
+        } else {
+            findViewById<Spinner>(R.id.year).setSelection(applicationContext.resources.getTextArray(R.array.year_array)
+                .indexOfFirst { year -> year == inputs.getString(R.id.year.toString(), "0") })
+            findViewById<Spinner>(R.id.month).setSelection(applicationContext.resources.getTextArray(R.array.month_array)
+                .indexOfFirst { month -> month == inputs.getString(R.id.month.toString(), "0") })
+        }
+    }
+
+    private fun saveInputs() {
+        val initialData = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (initialData.edit()) {
+            putInt(R.id.genderRadioGroup.toString(), findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId)
+            putInt(R.id.ageRadioGroup.toString(), findViewById<RadioGroup>(R.id.ageRadioGroup).checkedRadioButtonId)
+            putString(R.id.childName.toString(), findViewById<EditText>(R.id.childName).text.toString())
+            putString(R.id.pickedDate.toString(), findViewById<TextView>(R.id.pickedDate).text.toString())
+            putString(R.id.year.toString(), findViewById<Spinner>(R.id.year).selectedItem.toString())
+            putString(R.id.month.toString(), findViewById<Spinner>(R.id.month).selectedItem.toString())
+            commit()
+        }
     }
 
     private fun closeKeyboard(view: View) {
@@ -228,5 +255,4 @@ class MainActivity : AppCompatActivity() {
         val datePicker = DatePickerFragment()
         datePicker.show(supportFragmentManager, "datePicker")
     }
-
 }

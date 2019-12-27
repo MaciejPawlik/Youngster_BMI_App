@@ -123,7 +123,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/pickedDate"/>
 
         <TextView
-                android:text="@string/initialBirthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/pickedDate"
@@ -135,7 +134,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/datePicker"/>
 
         <Button
-                android:text="@string/changeBirthDate"
+                android:text="@string/setBirthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/datePicker"

@@ -13,8 +13,7 @@
     <string name="centileHeight">Centyl wzrost</string>
     <string name="centileBmi">Centyl BMI</string>
     <string name="BMI">BMI</string>
-    <string name="changeBirthDate">Zmień</string>
-    <string name="initialBirthDate">01.01.2020</string>
+    <string name="setBirthDate">Ustaw</string>
     <string name="labelBirthDate">Data urodzenia:</string>
     <string name="labelAge">Wiek (lata, miesiące)</string>
     <string name="age">Wiek</string>
