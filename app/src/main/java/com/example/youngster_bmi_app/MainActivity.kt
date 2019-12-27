@@ -97,18 +97,25 @@ class MainActivity : AppCompatActivity() {
         val weightText = findViewById<EditText>(R.id.weight).text.toString()
         val heightText = findViewById<EditText>(R.id.height).text.toString()
         val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
-        val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.1 // to avoid dividing by 0 in BMI
+        val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.0
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
-        val bmi = getBmi(weight, height)
-        val results = findCentile(standards, gender, age, weight, height, bmi)
 
-        findViewById<TextView>(R.id.BMI).text = ("BMI: ").plus("%.2f".format(bmi))
-        findViewById<TextView>(R.id.centileWeight).text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
-        findViewById<TextView>(R.id.centileHeight).text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
-        findViewById<TextView>(R.id.centileBmi).text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
-        saveInputs()
-        findViewById<Button>(R.id.calculate).visibility = View.GONE
-        findViewById<Button>(R.id.save).visibility = View.VISIBLE
+        val wrongInputs = mapOf(getString(R.string.age) to age.toDouble(), getString(R.string.weight) to weight, getString(R.string.height) to height)
+            .filter { it.value == 0.0  }
+
+        if (wrongInputs.isEmpty()) {
+            val bmi = getBmi(weight, height)
+            val results = findCentile(standards, gender, age, weight, height, bmi)
+            findViewById<TextView>(R.id.BMI).text = ("BMI: ").plus("%.2f".format(bmi))
+            findViewById<TextView>(R.id.centileWeight).text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
+            findViewById<TextView>(R.id.centileHeight).text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
+            findViewById<TextView>(R.id.centileBmi).text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
+            saveInputs()
+            findViewById<Button>(R.id.calculate).visibility = View.GONE
+            findViewById<Button>(R.id.save).visibility = View.VISIBLE
+        } else {
+            Toast.makeText(applicationContext, getString(R.string.fillFields).plus(wrongInputs.keys.joinToString(", ")), Toast.LENGTH_LONG).show()
+        }
         closeKeyboard(view)
     }
 
@@ -155,14 +162,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun countMonths(): Int {
-        val date = findViewById<TextView>(R.id.pickedDate).text.toString()
+        var date = findViewById<TextView>(R.id.pickedDate).text.toString()
+        if (date.isBlank()) date = getToday(false)
         val birthDate = SimpleDateFormat("dd.MM.yyyy").parse(date).time
         val days = Date().time.minus(birthDate) / (1000 * 3600 * 24)
         return (days / 30.5f).roundToInt() // average days in months
     }
 
     private fun getResult(result: Int): String {
-        return if (result > -1) result.toString() else "brak danych dla tego wieku"
+        return if (result > -1) result.toString() else getString(R.string.noDataForThisAge)
+    }
+
+    private fun getToday(startWithYear: Boolean): String {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR).toString()
+        val month = if (c.get(Calendar.MONTH) + 1 > 9) (c.get(Calendar.MONTH) + 1).toString() else "0".plus((c.get(Calendar.MONTH) + 1).toString())
+        val day = if (c.get(Calendar.DAY_OF_MONTH) > 9) c.get(Calendar.DAY_OF_MONTH).toString() else "0".plus(c.get(Calendar.DAY_OF_MONTH).toString())
+        val separator = "."
+        return if (startWithYear) year.plus(separator).plus(month).plus(separator).plus(day) else day.plus(separator).plus(month).plus(separator).plus(year)
     }
 
     private fun findCentile(standardData: List<Standard>, gender: Gender, age: Int, weight: Double, height: Double, bmi: Double): Map<Type, Int> {
@@ -188,7 +205,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCentiles(): List<Standard> {
         val centiles = mutableListOf<Standard>()
-        val reader = applicationContext.assets.open("centiles.csv").bufferedReader()
+        val reader = applicationContext.assets.open(getString(R.string.centilesFile)).bufferedReader()
         for (line in reader.readLines()) {
             val dataField = line.split(",")
             centiles.add(
@@ -220,16 +237,11 @@ class MainActivity : AppCompatActivity() {
 
     fun saveResults(view: View) {
         val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR).toString()
-        val month = if (c.get(Calendar.MONTH) + 1 > 9) c.get(Calendar.MONTH).toString() else "0".plus(c.get(Calendar.MONTH).toString())
-        val day = if (c.get(Calendar.DAY_OF_MONTH) > 9) c.get(Calendar.DAY_OF_MONTH).toString() else "0".plus(c.get(Calendar.DAY_OF_MONTH).toString())
-        val separator = "."
         val results = arrayOf(
             findViewById<RadioButton>(pickedRadioGenderId).hint.toString(),
             getAge().toString(),
             findViewById<EditText>(R.id.childName).text.toString(),
-            year.plus(separator).plus(month).plus(separator).plus(day),
+            getToday(true),
             findViewById<EditText>(R.id.weight).text.toString(),
             findViewById<EditText>(R.id.height).text.toString()
             )
@@ -238,14 +250,14 @@ class MainActivity : AppCompatActivity() {
             writeToFile(results)
             findViewById<Button>(R.id.save).visibility = View.GONE
             closeKeyboard(view)
-            Toast.makeText(applicationContext, "Zapisano wyniki", LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.resultsSaved, LENGTH_SHORT).show()
         } catch (e: IOException) {
-            Toast.makeText(applicationContext, "Błąd zapisu wyników", LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.resultsNotSaved, LENGTH_SHORT).show()
         }
     }
 
     private fun writeToFile(results: Array<String>) {
-        val writer = applicationContext.openFileOutput("results.csv", Context.MODE_APPEND)
+        val writer = applicationContext.openFileOutput(getString(R.string.resultsFile), Context.MODE_APPEND)
             .writer()
             .append(results.joinToString(","))
         writer.close()
