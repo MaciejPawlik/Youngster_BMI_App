@@ -19,7 +19,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-        val date = activity?.findViewById<TextView>(R.id.pickedDate)?.apply {
+        val date = activity?.findViewById<TextView>(R.id.pickedDateTextView)?.apply {
             text = (if (day < 10) "0".plus(day.toString()) else day.toString())
                 .plus(if (month + 1 < 10) ".0" else ".").plus((month + 1).toString())
                 .plus(".").plus(year.toString())

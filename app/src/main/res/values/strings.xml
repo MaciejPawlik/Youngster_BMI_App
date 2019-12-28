@@ -18,7 +18,7 @@
     <string name="labelAge">Wiek (lata, miesiące)</string>
     <string name="age">Wiek</string>
     <string name="birthDate">Data urodzenia</string>
-    <string name="name">Imię</string>
+    <string name="childName">Imię</string>
     <string name="save">Zapisz</string>
     <string name="resultsSaved">Zapisano wyniki</string>
     <string name="resultsNotSaved">Błąd zapisu wyników</string>
@@ -26,6 +26,7 @@
     <string name="noDataForThisAge">brak danych dla tego wieku</string>
     <string name="centilesFile">centiles.csv</string>
     <string name="resultsFile">results.csv</string>
+    <string name="listResults">Przeglądaj wyniki</string>
     <string-array name="year_array">
         <item>0</item>
         <item>1</item>
@@ -49,6 +50,7 @@
     </string-array>
     <string-array name="month_array">
         <item>0</item>
+        <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>

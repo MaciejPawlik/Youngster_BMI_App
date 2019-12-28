@@ -82,11 +82,11 @@
         </RadioGroup>
 
         <EditText
-                android:hint="@string/name"
+                android:hint="@string/childName"
                 android:layout_width="260dp"
                 android:layout_height="60dp"
                 android:inputType="textPersonName"
-                android:id="@+id/childName"
+                android:id="@+id/childNameEditText"
                 android:importantForAutofill="no"
                 app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup"
                 android:layout_marginStart="16dp"
@@ -108,7 +108,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/childName"
+                app:layout_constraintTop_toBottomOf="@+id/childNameEditText"
                 android:id="@+id/linearLayoutBirth"
                 android:visibility="gone">
 
@@ -121,12 +121,12 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/pickedDate"/>
+                    app:layout_constraintEnd_toStartOf="@+id/pickedDateTextView"/>
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pickedDate"
+                    android:id="@+id/pickedDateTextView"
                     android:baselineAligned="false"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -142,7 +142,7 @@
                     android:onClick="showDatePickerDialog"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/pickedDate"
+                    app:layout_constraintStart_toEndOf="@+id/pickedDateTextView"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -170,28 +170,28 @@
                     android:baselineAligned="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/year"
+                    app:layout_constraintEnd_toStartOf="@+id/yearSpinner"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/year"
+                    android:id="@+id/yearSpinner"
                     app:layout_constraintStart_toEndOf="@+id/labelAge"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/month"
+                    app:layout_constraintEnd_toStartOf="@+id/monthSpinner"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/month"
+                    android:id="@+id/monthSpinner"
                     android:baselineAligned="false"
-                    app:layout_constraintStart_toEndOf="@+id/year"
+                    app:layout_constraintStart_toEndOf="@+id/yearSpinner"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -218,11 +218,11 @@
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:inputType="numberDecimal"
-                    android:id="@+id/height"
+                    android:id="@+id/heightEditText"
                     android:importantForAutofill="no"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/labelHeight"
+                    app:layout_constraintStart_toEndOf="@+id/heightTextView"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -234,46 +234,46 @@
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:inputType="numberDecimal"
-                    android:id="@+id/weight"
+                    android:id="@+id/weightEditText"
                     android:importantForAutofill="no"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/labelWeight"
+                    app:layout_constraintStart_toEndOf="@+id/weightTextView"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/labelHeight"/>
+                    app:layout_constraintEnd_toStartOf="@+id/heightTextView"/>
 
             <TextView
                     android:text="@string/weight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/labelWeight"
+                    android:id="@+id/weightTextView"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/weight"/>
+                    app:layout_constraintEnd_toStartOf="@+id/weightEditText"/>
 
             <TextView
                     android:text="@string/height"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/labelHeight"
-                    app:layout_constraintStart_toEndOf="@+id/weight"
+                    android:id="@+id/heightTextView"
+                    app:layout_constraintStart_toEndOf="@+id/weightEditText"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/height"/>
+                    app:layout_constraintEnd_toStartOf="@+id/heightEditText"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
                 android:text="@string/go"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/calculate"
+                android:id="@+id/calculateButton"
                 android:onClick="calculateCentile"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutWeightHeight"
@@ -285,41 +285,45 @@
                 android:layout_marginRight="16dp"/>
 
         <TextView
+                android:text="@string/BMI"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/BMI"
+                android:id="@+id/BMITextView"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/calculate"
+                app:layout_constraintTop_toBottomOf="@+id/calculateButton"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"/>
 
         <TextView
+                android:text="@string/centileWeight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/centileWeight"
+                android:id="@+id/centileWeightTextView"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/BMI"
+                app:layout_constraintTop_toBottomOf="@+id/BMITextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"/>
 
         <TextView
+                android:text="@string/centileHeight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/centileHeight"
+                android:id="@+id/centileHeightTextView"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/centileWeight"
+                app:layout_constraintTop_toBottomOf="@+id/centileWeightTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"/>
 
         <TextView
+                android:text="@string/centileBmi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/centileBmi"
+                android:id="@+id/centileBmiTextView"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/centileHeight"
+                app:layout_constraintTop_toBottomOf="@+id/centileHeightTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"/>
@@ -328,10 +332,10 @@
                 android:text="@string/save"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/save"
+                android:id="@+id/saveResultsButton"
                 android:onClick="saveResults"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/centileBmi"
+                app:layout_constraintTop_toBottomOf="@+id/centileBmiTextView"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -339,6 +343,22 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:visibility="gone"/>
+
+        <Button
+                android:text="@string/listResults"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listResultsButton"
+                android:onClick="listResults"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/saveResultsButton"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -13,6 +13,7 @@ import com.example.youngster_bmi_app.centile.Centile
 import com.example.youngster_bmi_app.centile.Gender
 import com.example.youngster_bmi_app.centile.Standard
 import com.example.youngster_bmi_app.centile.Type
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,58 +22,102 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var calculateButton: Button
+    private lateinit var saveButton: Button
+    private lateinit var listResultButton: Button
+    private lateinit var yearSpinner: Spinner
+    private lateinit var monthSpinner: Spinner
+    private lateinit var ageRadioGroup: RadioGroup
+    private lateinit var genderRadioGroup: RadioGroup
+    private lateinit var weightEditText: EditText
+    private lateinit var heightEditText: EditText
+    private lateinit var childNameEditText: EditText
+    private lateinit var pickedDateTexView: TextView
+    private lateinit var bmiTexView: TextView
+    private lateinit var centileWeightTexView: TextView
+    private lateinit var centileHeightTexView: TextView
+    private lateinit var centileBmiTexView: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        calculateButton = findViewById(R.id.calculateButton)
+        saveButton = findViewById(R.id.saveResultsButton)
+        listResultButton = findViewById(R.id.listResultsButton)
+        ageRadioGroup = findViewById(R.id.ageRadioGroup)
+        genderRadioGroup = findViewById(R.id.genderRadioGroup)
+        heightEditText = findViewById(R.id.heightEditText)
+        weightEditText = findViewById(R.id.weightEditText)
+        childNameEditText = findViewById(R.id.childNameEditText)
+        pickedDateTexView = findViewById(R.id.pickedDateTextView)
+        bmiTexView = findViewById(R.id.BMITextView)
+        centileBmiTexView = findViewById(R.id.centileBmiTextView)
+        centileHeightTexView = findViewById(R.id.centileHeightTextView)
+        centileWeightTexView = findViewById(R.id.centileWeightTextView)
         updateSpinners()
-        addListeners()
+        addOnInputChangeListeners()
         readLastInputs()
     }
 
     private fun updateSpinners() {
-        val year = findViewById<Spinner>(R.id.year)
+        yearSpinner = findViewById(R.id.yearSpinner)
         ArrayAdapter.createFromResource(this, R.array.year_array, android.R.layout.simple_spinner_dropdown_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            year.adapter = adapter
+            yearSpinner.adapter = adapter
         }
-        val month = findViewById<Spinner>(R.id.month)
+        monthSpinner = findViewById(R.id.monthSpinner)
         ArrayAdapter.createFromResource(this, R.array.month_array, android.R.layout.simple_spinner_dropdown_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            month.adapter = adapter
+            monthSpinner.adapter = adapter
         }
-        year.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                goToRecalculation()
+                gotToRecalculationState()
             }
         }
-        month.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                goToRecalculation()
+                gotToRecalculationState()
             }
         }
     }
 
-    private fun addListeners() {
-        findViewById<RadioGroup>(R.id.genderRadioGroup).setOnCheckedChangeListener { group, checkedId -> goToRecalculation() }
-        findViewById<RadioGroup>(R.id.ageRadioGroup).setOnCheckedChangeListener { group, checkedId -> goToRecalculation() }
-        findViewById<EditText>(R.id.weight).addTextChangedListener { goToRecalculation() }
-        findViewById<EditText>(R.id.height).addTextChangedListener { goToRecalculation() }
-        findViewById<TextView>(R.id.pickedDate).addTextChangedListener { goToRecalculation() }
+    private fun addOnInputChangeListeners() {
+        genderRadioGroup.setOnCheckedChangeListener { group, checkedId -> gotToRecalculationState() }
+        ageRadioGroup.setOnCheckedChangeListener { group, checkedId -> gotToRecalculationState() }
+        weightEditText.addTextChangedListener { gotToRecalculationState() }
+        heightEditText.addTextChangedListener { gotToRecalculationState() }
+        pickedDateTexView.addTextChangedListener { gotToRecalculationState() }
     }
 
-    private fun goToRecalculation() {
-        val calculateButton = findViewById<Button>(R.id.calculate)
+    private fun gotToRecalculationState() {
         if (calculateButton.visibility == View.GONE) {
-            findViewById<Button>(R.id.save).visibility = View.GONE
+            saveButton.visibility = View.GONE
             calculateButton.visibility = View.VISIBLE
+        }
+    }
+
+    private fun readLastInputs() {
+        val inputs = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        genderRadioGroup.check(inputs.getInt(R.id.genderRadioGroup.toString(), findViewById<RadioButton>(R.id.GIRL).id))
+        ageRadioGroup.check(inputs.getInt(R.id.ageRadioGroup.toString(), findViewById<RadioButton>(R.id.monthYears).id))
+        childNameEditText.setText(inputs.getString(R.id.childNameEditText.toString(), ""))
+        if (inputs.getInt(R.id.ageRadioGroup.toString(), 0) == findViewById<RadioButton>(R.id.birthDate).id) {
+            switchAgeInput()
+            pickedDateTexView.text = inputs.getString(R.id.pickedDateTextView.toString(), "")
+        } else {
+            yearSpinner.setSelection(applicationContext.resources.getTextArray(R.array.year_array)
+                .indexOfFirst { year -> year == inputs.getString(R.id.yearSpinner.toString(), "0") })
+            monthSpinner.setSelection(applicationContext.resources.getTextArray(R.array.month_array)
+                .indexOfFirst { month -> month == inputs.getString(R.id.monthSpinner.toString(), "0") })
         }
     }
 
@@ -91,14 +136,16 @@ class MainActivity : AppCompatActivity() {
 
     fun calculateCentile(view: View) {
         val standards = getCentiles()
-        val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
+        val pickedRadioGenderId = genderRadioGroup.checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
         val age = getAge()
-        val weightText = findViewById<EditText>(R.id.weight).text.toString()
-        val heightText = findViewById<EditText>(R.id.height).text.toString()
+        val weightText = weightEditText.text.toString()
+        val heightText = heightEditText.text.toString()
         val weight = if (weightText.isNotEmpty()) weightText.toDouble() else 0.0
         val height = if (heightText.isNotEmpty()) heightText.toDouble() else 0.0
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
+
+        closeKeyboard(view)
 
         val wrongInputs = mapOf(getString(R.string.age) to age.toDouble(), getString(R.string.weight) to weight, getString(R.string.height) to height)
             .filter { it.value == 0.0  }
@@ -106,44 +153,27 @@ class MainActivity : AppCompatActivity() {
         if (wrongInputs.isEmpty()) {
             val bmi = getBmi(weight, height)
             val results = findCentile(standards, gender, age, weight, height, bmi)
-            findViewById<TextView>(R.id.BMI).text = ("BMI: ").plus("%.2f".format(bmi))
-            findViewById<TextView>(R.id.centileWeight).text = ("Centyl waga: ").plus(getResult(results[Type.WEIGHT]!!))
-            findViewById<TextView>(R.id.centileHeight).text = ("Centyl wzrost: ").plus(getResult(results[Type.HEIGHT]!!))
-            findViewById<TextView>(R.id.centileBmi).text = ("Centyl BMI: ").plus(getResult(results[Type.BMI]!!))
+            BMITextView.text = getString(R.string.BMI).plus(": ").plus("%.2f".format(bmi))
+            centileWeightTexView.text = getString(R.string.centileWeight).plus(": ").plus(getResult(results[Type.WEIGHT]!!))
+            centileHeightTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(results[Type.HEIGHT]!!))
+            centileBmiTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(results[Type.BMI]!!))
             saveInputs()
-            findViewById<Button>(R.id.calculate).visibility = View.GONE
-            findViewById<Button>(R.id.save).visibility = View.VISIBLE
+            saveButton.visibility = View.VISIBLE
+            calculateButton.visibility = View.GONE
         } else {
             Toast.makeText(applicationContext, getString(R.string.fillFields).plus(wrongInputs.keys.joinToString(", ")), Toast.LENGTH_LONG).show()
-        }
-        closeKeyboard(view)
-    }
-
-    private fun readLastInputs() {
-        val inputs = this.getPreferences(Context.MODE_PRIVATE) ?: return
-        findViewById<RadioGroup>(R.id.genderRadioGroup).check(inputs.getInt(R.id.genderRadioGroup.toString(), findViewById<RadioButton>(R.id.GIRL).id))
-        findViewById<RadioGroup>(R.id.ageRadioGroup).check(inputs.getInt(R.id.ageRadioGroup.toString(), findViewById<RadioButton>(R.id.monthYears).id))
-        findViewById<EditText>(R.id.childName).setText(inputs.getString(R.id.childName.toString(), ""))
-        if (inputs.getInt(R.id.ageRadioGroup.toString(), 0) == findViewById<RadioButton>(R.id.birthDate).id) {
-            switchAgeInput()
-            findViewById<TextView>(R.id.pickedDate).text = inputs.getString(R.id.pickedDate.toString(), "")
-        } else {
-            findViewById<Spinner>(R.id.year).setSelection(applicationContext.resources.getTextArray(R.array.year_array)
-                .indexOfFirst { year -> year == inputs.getString(R.id.year.toString(), "0") })
-            findViewById<Spinner>(R.id.month).setSelection(applicationContext.resources.getTextArray(R.array.month_array)
-                .indexOfFirst { month -> month == inputs.getString(R.id.month.toString(), "0") })
         }
     }
 
     private fun saveInputs() {
         val initialData = this.getPreferences(Context.MODE_PRIVATE) ?: return
         with (initialData.edit()) {
-            putInt(R.id.genderRadioGroup.toString(), findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId)
-            putInt(R.id.ageRadioGroup.toString(), findViewById<RadioGroup>(R.id.ageRadioGroup).checkedRadioButtonId)
-            putString(R.id.childName.toString(), findViewById<EditText>(R.id.childName).text.toString())
-            putString(R.id.pickedDate.toString(), findViewById<TextView>(R.id.pickedDate).text.toString())
-            putString(R.id.year.toString(), findViewById<Spinner>(R.id.year).selectedItem.toString())
-            putString(R.id.month.toString(), findViewById<Spinner>(R.id.month).selectedItem.toString())
+            putInt(R.id.genderRadioGroup.toString(), genderRadioGroup.checkedRadioButtonId)
+            putInt(R.id.ageRadioGroup.toString(), ageRadioGroup.checkedRadioButtonId)
+            putString(R.id.childNameEditText.toString(), childNameEditText.text.toString())
+            putString(R.id.pickedDateTextView.toString(), pickedDateTexView.text.toString())
+            putString(R.id.yearSpinner.toString(), yearSpinner.selectedItem.toString())
+            putString(R.id.monthSpinner.toString(), monthSpinner.selectedItem.toString())
             commit()
         }
     }
@@ -154,15 +184,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAge(): Int = if (findViewById<RadioButton>(R.id.monthYears).isChecked) {
-        val months = findViewById<Spinner>(R.id.month).selectedItem.toString().toInt()
-        val years = findViewById<Spinner>(R.id.year).selectedItem.toString().toInt()
+        val months = monthSpinner.selectedItem.toString().toInt()
+        val years = yearSpinner.selectedItem.toString().toInt()
         years * 12 + months
     } else {
         countMonths()
     }
 
     private fun countMonths(): Int {
-        var date = findViewById<TextView>(R.id.pickedDate).text.toString()
+        var date = pickedDateTexView.text.toString()
         if (date.isBlank()) date = getToday(false)
         val birthDate = SimpleDateFormat("dd.MM.yyyy").parse(date).time
         val days = Date().time.minus(birthDate) / (1000 * 3600 * 24)
@@ -236,19 +266,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun saveResults(view: View) {
-        val pickedRadioGenderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
+        val pickedRadioGenderId = genderRadioGroup.checkedRadioButtonId
         val results = arrayOf(
             findViewById<RadioButton>(pickedRadioGenderId).hint.toString(),
             getAge().toString(),
-            findViewById<EditText>(R.id.childName).text.toString(),
+            childNameEditText.text.toString(),
             getToday(true),
-            findViewById<EditText>(R.id.weight).text.toString(),
-            findViewById<EditText>(R.id.height).text.toString()
+            weightEditText.text.toString(),
+            heightEditText.text.toString()
             )
 
         try {
             writeToFile(results)
-            findViewById<Button>(R.id.save).visibility = View.GONE
+            saveResultsButton.visibility = View.GONE
             closeKeyboard(view)
             Toast.makeText(applicationContext, R.string.resultsSaved, LENGTH_SHORT).show()
         } catch (e: IOException) {
@@ -263,8 +293,12 @@ class MainActivity : AppCompatActivity() {
         writer.close()
     }
 
-    fun showDatePickerDialog(v: View) {
+    fun showDatePickerDialog(view: View) {
         val datePicker = DatePickerFragment()
         datePicker.show(supportFragmentManager, "datePicker")
+    }
+
+    fun listResults(view: View) {
+
     }
 }
