@@ -9,10 +9,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
-import com.example.youngster_bmi_app.centile.Centile
-import com.example.youngster_bmi_app.centile.Gender
-import com.example.youngster_bmi_app.centile.Standard
-import com.example.youngster_bmi_app.centile.Type
+import com.example.youngster_bmi_app.centile.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -37,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileWeightTexView: TextView
     private lateinit var centileHeightTexView: TextView
     private lateinit var centileBmiTexView: TextView
+    private val centileService: CentileService = CentileService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,7 +133,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun calculateCentile(view: View) {
-        val standards = getCentiles()
         val pickedRadioGenderId = genderRadioGroup.checkedRadioButtonId
         val genderRadioButton = findViewById<RadioButton>(pickedRadioGenderId)
         val age = getAge()
@@ -146,23 +143,25 @@ class MainActivity : AppCompatActivity() {
         val gender = Gender.valueOf(genderRadioButton.hint.toString())
 
         closeKeyboard(view)
-
         val wrongInputs = mapOf(getString(R.string.age) to age.toDouble(), getString(R.string.weight) to weight, getString(R.string.height) to height)
             .filter { it.value == 0.0  }
-
         if (wrongInputs.isEmpty()) {
-            val bmi = getBmi(weight, height)
-            val results = findCentile(standards, gender, age, weight, height, bmi)
-            BMITextView.text = getString(R.string.BMI).plus(": ").plus("%.2f".format(bmi))
-            centileWeightTexView.text = getString(R.string.centileWeight).plus(": ").plus(getResult(results[Type.WEIGHT]!!))
-            centileHeightTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(results[Type.HEIGHT]!!))
-            centileBmiTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(results[Type.BMI]!!))
-            saveInputs()
-            saveButton.visibility = View.VISIBLE
-            calculateButton.visibility = View.GONE
+            publishCentile(gender, age, weight, height)
         } else {
             Toast.makeText(applicationContext, getString(R.string.fillFields).plus(wrongInputs.keys.joinToString(", ")), Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun publishCentile(gender: Gender, age: Int, weight: Double, height: Double) {
+        val bmi = getBmi(weight, height)
+        val results = centileService.findCentile(applicationContext, getString(R.string.centilesFile), gender, age, weight, height, bmi)
+        BMITextView.text = getString(R.string.BMI).plus(": ").plus("%.2f".format(bmi))
+        centileWeightTexView.text = getString(R.string.centileWeight).plus(": ").plus(getResult(results[Type.WEIGHT]!!))
+        centileHeightTexView.text = getString(R.string.centileHeight).plus(": ").plus(getResult(results[Type.HEIGHT]!!))
+        centileBmiTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(results[Type.BMI]!!))
+        saveInputs()
+        saveButton.visibility = View.VISIBLE
+        calculateButton.visibility = View.GONE
     }
 
     private fun saveInputs() {
@@ -212,57 +211,8 @@ class MainActivity : AppCompatActivity() {
         return if (startWithYear) year.plus(separator).plus(month).plus(separator).plus(day) else day.plus(separator).plus(month).plus(separator).plus(year)
     }
 
-    private fun findCentile(standardData: List<Standard>, gender: Gender, age: Int, weight: Double, height: Double, bmi: Double): Map<Type, Int> {
-        val typeToCentile = mutableMapOf(Type.WEIGHT to -1, Type.HEIGHT to -1, Type.BMI to -1)
-
-        val standards = standardData.filter { it.gender == gender && it.age == age }
-
-        if (standards.isNotEmpty()) {
-            val typeToValue = mapOf(Type.WEIGHT to weight, Type.HEIGHT to height, Type.BMI to bmi)
-            standards.forEach { typeToCentile[it.type] = getPercentile(it.centiles, typeToValue[it.type]!!) }
-        }
-        return typeToCentile
-    }
-
-    private fun getPercentile(centiles: List<Centile>, value: Double) : Int {
-        val centile = centiles.lastOrNull { it.value <= value }
-        return centile?.percentile ?: 1
-    }
-
     private fun getBmi(weight: Double, height: Double): Double {
         return weight / (height / 100).pow(2.0)
-    }
-
-    private fun getCentiles(): List<Standard> {
-        val centiles = mutableListOf<Standard>()
-        val reader = applicationContext.assets.open(getString(R.string.centilesFile)).bufferedReader()
-        for (line in reader.readLines()) {
-            val dataField = line.split(",")
-            centiles.add(
-                Standard(
-                    Gender.valueOf(dataField[0]),
-                    Type.valueOf(dataField[1]),
-                    dataField[2].toInt(),
-                    listOf(
-                        Centile(1, dataField[3].toDouble()),
-                        Centile(3, dataField[4].toDouble()),
-                        Centile(5, dataField[5].toDouble()),
-                        Centile(10, dataField[6].toDouble()),
-                        Centile(15, dataField[7].toDouble()),
-                        Centile(25, dataField[8].toDouble()),
-                        Centile(50, dataField[9].toDouble()),
-                        Centile(75, dataField[10].toDouble()),
-                        Centile(85, dataField[11].toDouble()),
-                        Centile(90, dataField[12].toDouble()),
-                        Centile(95, dataField[13].toDouble()),
-                        Centile(97, dataField[14].toDouble()),
-                        Centile(99, dataField[15].toDouble())
-                    )
-                )
-            )
-        }
-        reader.close()
-        return centiles
     }
 
     fun saveResults(view: View) {
