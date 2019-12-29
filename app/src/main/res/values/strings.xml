@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Oblicz centyl dziecka</string>
+    <string name="app_name">Oblicz centyl dziecka</string>
     <string name="Płeć">Gender</string>
     <string name="gender">Płeć</string>
     <string name="Girl">Dziewczynka</string>
@@ -61,4 +61,6 @@
         <item>10</item>
         <item>11</item>
     </string-array>
+    <string name="title_activity_control">Control</string>
+    <string name="action_settings">Settings</string>
 </resources>

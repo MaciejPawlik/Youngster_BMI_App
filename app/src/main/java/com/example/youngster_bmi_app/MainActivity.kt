@@ -1,6 +1,7 @@
 package com.example.youngster_bmi_app
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -9,7 +10,8 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
-import com.example.youngster_bmi_app.centile.*
+import com.example.youngster_bmi_app.impl.CentileService
+import com.example.youngster_bmi_app.model.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -34,7 +36,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileWeightTexView: TextView
     private lateinit var centileHeightTexView: TextView
     private lateinit var centileBmiTexView: TextView
-    private val centileService: CentileService = CentileService()
+    private val centileService: CentileService =
+        CentileService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,10 +240,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun writeToFile(results: Array<String>) {
-        val writer = applicationContext.openFileOutput(getString(R.string.resultsFile), Context.MODE_APPEND)
-            .writer()
-            .append(results.joinToString(","))
-        writer.close()
+        applicationContext.openFileOutput(getString(R.string.resultsFile), Context.MODE_APPEND).writer().apply {
+            appendln(results.joinToString(","))
+            close()
+        }
     }
 
     fun showDatePickerDialog(view: View) {
@@ -249,6 +252,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun listResults(view: View) {
-
+        val resultListIntent = Intent(applicationContext, ResultListActivity::class.java)
+        startActivity(resultListIntent)
     }
 }

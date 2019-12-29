@@ -1,6 +1,10 @@
-package com.example.youngster_bmi_app.centile
+package com.example.youngster_bmi_app.impl
 
 import android.content.Context
+import com.example.youngster_bmi_app.model.Centile
+import com.example.youngster_bmi_app.model.Gender
+import com.example.youngster_bmi_app.model.Standard
+import com.example.youngster_bmi_app.model.Type
 
 class CentileService {
 

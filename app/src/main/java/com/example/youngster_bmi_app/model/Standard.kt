@@ -1,4 +1,4 @@
-package com.example.youngster_bmi_app.centile
+package com.example.youngster_bmi_app.model
 
 data class Standard (
     val gender: Gender,
