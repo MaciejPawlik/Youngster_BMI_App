@@ -5,19 +5,19 @@ import com.example.youngster_bmi_app.model.Centile
 import com.example.youngster_bmi_app.model.Gender
 import com.example.youngster_bmi_app.model.Standard
 import com.example.youngster_bmi_app.model.Type
+import kotlin.math.pow
 
-class CentileService {
+private const val FILE_NAME: String = "centiles.csv"
 
-    fun findCentile(context: Context, fileName: String, gender: Gender, age: Int, weight: Double, height: Double, bmi: Double): Map<Type, Int> {
-        val typeToCentile = mutableMapOf(Type.WEIGHT to -1, Type.HEIGHT to -1, Type.BMI to -1)
+class CentileService(val context: Context) {
 
-        val standards = getCentiles(context, fileName).filter { it.gender == gender && it.age == age }
+    fun findCentile(standards: List<Standard>, gender: Gender, age: Int, typeToValue: Pair<Type, Double>): Int {
+        val standard = standards.filter { it.gender == gender && it.age == age && it.type == typeToValue.first }
+        return if (standard.isNotEmpty()) getPercentile(standard.first().centiles, typeToValue.second) else -1
+    }
 
-        if (standards.isNotEmpty()) {
-            val typeToValue = mapOf(Type.WEIGHT to weight, Type.HEIGHT to height, Type.BMI to bmi)
-            standards.forEach { typeToCentile[it.type] = getPercentile(it.centiles, typeToValue[it.type]!!) }
-        }
-        return typeToCentile
+    fun getBmi(weight: Double, height: Double): Double {
+        return weight / (height / 100).pow(2.0)
     }
 
     private fun getPercentile(centiles: List<Centile>, value: Double) : Int {
@@ -25,9 +25,9 @@ class CentileService {
         return centile?.percentile ?: 1
     }
 
-    private fun getCentiles(context: Context, fileName: String): List<Standard> {
+    fun getCentiles(): List<Standard> {
         val centiles = mutableListOf<Standard>()
-        val reader = context.assets.open(fileName).bufferedReader()
+        val reader = context.assets.open(FILE_NAME).bufferedReader()
         for (line in reader.readLines()) {
             val dataField = line.split(",")
             centiles.add(

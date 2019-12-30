@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ControlResultFragment"
+        android:stretchColumns="*"
+        >
+
+    <TableRow>
+        <TextView
+                android:text="@string/recordDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlDate"
+                android:layout_weight="1"
+                android:gravity="left"/>
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+                android:text="@string/childName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlChildName"
+                android:layout_weight="1"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlGender"
+                android:layout_weight="1"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlAge"
+                android:layout_weight="1"
+                android:gravity="center"/>
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+                android:text="@string/weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlWeight"
+                android:layout_weight="1"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/controlHeight"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/BMI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/controlBmi"
+                android:gravity="center"/>
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+                android:text="@string/centileWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/controlCentileWeight"
+                android:layout_weight="1"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/centileHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/controlCentileHeight"
+                android:gravity="center"/>
+
+        <TextView
+                android:text="@string/centileBmi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/controlCentileBmi"
+                android:gravity="center"/>
+    </TableRow>
+    <View
+            android:layout_height="1dp"
+            android:background="#FF909090" />
+
+</TableLayout>

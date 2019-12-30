@@ -24,7 +24,6 @@
     <string name="resultsNotSaved">Błąd zapisu wyników</string>
     <string name="fillFields">Uzupełnij pola:</string>
     <string name="noDataForThisAge">brak danych dla tego wieku</string>
-    <string name="centilesFile">centiles.csv</string>
     <string name="resultsFile">results.csv</string>
     <string name="listResults">Przeglądaj wyniki</string>
     <string-array name="year_array">
@@ -63,4 +62,5 @@
     </string-array>
     <string name="title_activity_control">Control</string>
     <string name="action_settings">Settings</string>
+    <string name="recordDate">Data zapisu</string>
 </resources>
