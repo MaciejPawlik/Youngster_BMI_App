@@ -2,6 +2,8 @@ package com.example.youngster_bmi_app.impl
 
 import com.example.youngster_bmi_app.model.*
 
+private const val DATA_NOT_AVAILABLE: String = "b/d"
+
 class ControlService(private val centileService: CentileService, private val fileNameResults: String) {
 
     fun getControlResults(): List<ControlCentile> {
@@ -17,10 +19,14 @@ class ControlService(private val centileService: CentileService, private val fil
         weight = weight,
         height = height,
         bmi = "%.2f".format(centileService.getBmi(weight.toDouble(), height.toDouble())),
-        centileWeight = centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.WEIGHT to weight.toDouble()).toString(),
-        centileHeight = centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.HEIGHT to height.toDouble()).toString(),
-        centileBmi = centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.BMI to centileService.getBmi(weight.toDouble(), height.toDouble())).toString()
+        centileWeight = formatResults(centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.WEIGHT to weight.toDouble())),
+        centileHeight = formatResults(centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.HEIGHT to height.toDouble())),
+        centileBmi = formatResults(centileService.findCentile(standards, Gender.valueOf(gender), age.toInt(),Type.BMI to centileService.getBmi(weight.toDouble(), height.toDouble())))
     )
+
+    private fun formatResults(results: Int): String {
+        return if (results > 0) results.toString() else DATA_NOT_AVAILABLE
+    }
 
     private fun formatAge(age: Int): String {
         val months = age.rem(12)
@@ -29,7 +35,7 @@ class ControlService(private val centileService: CentileService, private val fil
             1 -> "1r. "
             else -> years.toString().plus("l. ")
         }
-        return yearsFormatted.plus(if (months > 0) months.toString().plus("m.") else "")
+        return yearsFormatted.plus(months.toString().plus("m."))
     }
 
     private fun readResults(): List<Control> {
