@@ -2,9 +2,11 @@ package com.example.youngster_bmi_app.impl
 
 import com.example.youngster_bmi_app.model.*
 
-private const val DATA_NOT_AVAILABLE: String = "b/d"
-
-class ControlService(private val centileService: CentileService, private val fileNameResults: String) {
+class ControlService(
+    private val centileService: CentileService,
+    private val fileNameResults: String,
+    private val noDataMessage: String
+) {
 
     fun getControlResults(): List<ControlCentile> {
         val standards = centileService.getCentiles()
@@ -25,7 +27,7 @@ class ControlService(private val centileService: CentileService, private val fil
     )
 
     private fun formatResults(results: Int): String {
-        return if (results > 0) results.toString() else DATA_NOT_AVAILABLE
+        return if (results > 0) results.toString() else noDataMessage
     }
 
     private fun formatAge(age: Int): String {

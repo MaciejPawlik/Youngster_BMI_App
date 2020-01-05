@@ -23,7 +23,8 @@
     <string name="resultsSaved">Zapisano wyniki</string>
     <string name="resultsNotSaved">Błąd zapisu wyników</string>
     <string name="fillFields">Uzupełnij pola:</string>
-    <string name="noDataForThisAge">brak danych dla tego wieku</string>
+    <string name="noDataForThisAgeLong">brak danych dla tego wieku</string>
+    <string name="noDataForThisAgeShort">b/d</string>
     <string name="resultsFile">results.csv</string>
     <string name="listResults">Przeglądaj wyniki</string>
     <string-array name="year_array">

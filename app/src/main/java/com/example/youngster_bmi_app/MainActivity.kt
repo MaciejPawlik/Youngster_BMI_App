@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -202,7 +201,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getResult(result: Int): String {
-        return if (result > -1) result.toString() else getString(R.string.noDataForThisAge)
+        return if (result > -1) result.toString() else getString(R.string.noDataForThisAgeLong)
     }
 
     private fun getToday(startWithYear: Boolean): String {
