@@ -18,13 +18,10 @@ class ControlServiceTest {
     val tested = ControlService(centileService, resultFileName, context.getString(R.string.noDataForThisAgeShort))
 
     @Test
-    fun getControlResults() {
+    fun saveAndGetControlResults() {
         //given
         val mockedData = arrayOf("BOY", "130", "James", "2020-01-05", "30", "141")
-        context.openFileOutput(resultFileName, Context.MODE_APPEND).writer().apply {
-            appendln(mockedData.joinToString(","))
-            close()
-        }
+        tested.saveControlResults(mockedData)
         val expected = listOf(ControlCentile("BOY", "10l. 10m.", "James", "2020-01-05", "30", "141", "15.09", "25", noDataMessage, "10"))
         //when
         val result = tested.getControlResults()

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import com.example.youngster_bmi_app.impl.CentileService
+import com.example.youngster_bmi_app.impl.ControlService
 import com.example.youngster_bmi_app.model.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
@@ -36,11 +37,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileHeightTexView: TextView
     private lateinit var centileBmiTexView: TextView
     private lateinit var centileService: CentileService
+    private lateinit var controlService: ControlService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         centileService = CentileService(applicationContext)
+        controlService = ControlService(centileService, getString(R.string.resultsFile), getString(R.string.noDataForThisAgeShort))
         calculateButton = findViewById(R.id.calculateButton)
         saveButton = findViewById(R.id.saveResultsButton)
         listResultButton = findViewById(R.id.listResultsButton)
@@ -225,19 +228,12 @@ class MainActivity : AppCompatActivity() {
             )
 
         try {
-            writeToFile(results)
+            controlService.saveControlResults(results)
             saveResultsButton.visibility = View.GONE
             closeKeyboard(view)
             Toast.makeText(applicationContext, R.string.resultsSaved, LENGTH_SHORT).show()
         } catch (e: IOException) {
             Toast.makeText(applicationContext, R.string.resultsNotSaved, LENGTH_SHORT).show()
-        }
-    }
-
-    private fun writeToFile(results: Array<String>) {
-        applicationContext.openFileOutput(getString(R.string.resultsFile), Context.MODE_APPEND).writer().apply {
-            appendln(results.joinToString(","))
-            close()
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.youngster_bmi_app.impl
 
+import android.content.Context
 import com.example.youngster_bmi_app.model.*
 
 class ControlService(
@@ -7,6 +8,13 @@ class ControlService(
     private val fileNameResults: String,
     private val noDataMessage: String
 ) {
+
+    fun saveControlResults(results: Array<String>) {
+        centileService.context.openFileOutput(fileNameResults, Context.MODE_APPEND).writer().apply {
+            appendln(results.joinToString(","))
+            close()
+        }
+    }
 
     fun getControlResults(): List<ControlCentile> {
         val standards = centileService.getCentiles()
