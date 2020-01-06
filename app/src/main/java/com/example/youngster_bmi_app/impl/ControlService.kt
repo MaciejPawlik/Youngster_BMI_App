@@ -2,12 +2,17 @@ package com.example.youngster_bmi_app.impl
 
 import android.content.Context
 import com.example.youngster_bmi_app.model.*
+import java.io.File
 
 class ControlService(
     private val centileService: CentileService,
     private val fileNameResults: String,
     private val noDataMessage: String
 ) {
+
+    fun isFileAvailableForReading(): Boolean {
+        return File(centileService.context.filesDir.path.plus("/").plus(fileNameResults)).canRead()
+    }
 
     fun saveControlResults(results: Array<String>) {
         centileService.context.openFileOutput(fileNameResults, Context.MODE_APPEND).writer().apply {

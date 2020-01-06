@@ -21,11 +21,15 @@ class ControlServiceTest {
     fun saveAndGetControlResults() {
         //given
         val mockedData = arrayOf("BOY", "130", "James", "2020-01-05", "30", "141")
+        val isReadabelBeforeSave = tested.isFileAvailableForReading()
         tested.saveControlResults(mockedData)
         val expected = listOf(ControlCentile("BOY", "10l. 10m.", "James", "2020-01-05", "30", "141", "15.09", "25", noDataMessage, "10"))
         //when
+        val isReadableAfterSave = tested.isFileAvailableForReading()
         val result = tested.getControlResults()
         //then
         assertEquals(expected, result)
+        assertFalse(isReadabelBeforeSave)
+        assertTrue(isReadableAfterSave)
     }
 }

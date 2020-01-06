@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         updateSpinners()
         addOnInputChangeListeners()
         readLastInputs()
+        if (!controlService.isFileAvailableForReading()) listResultButton.visibility = View.GONE
     }
 
     private fun updateSpinners() {
@@ -231,6 +232,7 @@ class MainActivity : AppCompatActivity() {
             controlService.saveControlResults(results)
             saveResultsButton.visibility = View.GONE
             closeKeyboard(view)
+            listResultButton.visibility = View.VISIBLE
             Toast.makeText(applicationContext, R.string.resultsSaved, LENGTH_SHORT).show()
         } catch (e: IOException) {
             Toast.makeText(applicationContext, R.string.resultsNotSaved, LENGTH_SHORT).show()
