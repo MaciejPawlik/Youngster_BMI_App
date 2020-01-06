@@ -9,7 +9,12 @@ import kotlin.math.pow
 
 private const val FILE_NAME: String = "centiles.csv"
 
-class CentileService(val context: Context) {
+class CentileService(val context: Context, private val noDataMessage: String) {
+
+    fun formatCentile(prefix: String, gender: Gender, age: Int, typeToValue: Pair<Type, Double>): String {
+        val result = findCentile(getCentiles(), gender, age, typeToValue)
+        return prefix.plus(": ").plus(if (result > -1) result.toString() else noDataMessage)
+    }
 
     fun findCentile(standards: List<Standard>, gender: Gender, age: Int, typeToValue: Pair<Type, Double>): Int {
         val standard = standards.filter { it.gender == gender && it.age == age && it.type == typeToValue.first }

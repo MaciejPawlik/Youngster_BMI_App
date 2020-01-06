@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        centileService = CentileService(applicationContext)
-        controlService = ControlService(centileService, getString(R.string.resultsFile), getString(R.string.noDataForThisAgeShort))
+        centileService = CentileService(applicationContext, getString(R.string.noDataForThisAgeLong))
+        controlService = ControlService(centileService, getString(R.string.resultsFile), getString(R.string.noDataForThisAgeLong))
         calculateButton = findViewById(R.id.calculateButton)
         saveButton = findViewById(R.id.saveResultsButton)
         listResultButton = findViewById(R.id.listResultsButton)
@@ -160,11 +160,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun publishCentile(gender: Gender, age: Int, weight: Double, height: Double) {
         val bmi = centileService.getBmi(weight, height)
-        val standards = centileService.getCentiles()
         BMITextView.text = getString(R.string.BMI).plus(": ").plus("%.2f".format(bmi))
-        centileWeightTexView.text = getString(R.string.centileWeight).plus(": ").plus(getResult(centileService.findCentile(standards, gender, age, Type.WEIGHT to weight)))
-        centileHeightTexView.text = getString(R.string.centileHeight).plus(": ").plus(getResult(centileService.findCentile(standards, gender, age, Type.HEIGHT to height)))
-        centileBmiTexView.text = getString(R.string.centileBmi).plus(": ").plus(getResult(centileService.findCentile(standards, gender, age, Type.BMI to bmi)))
+        centileWeightTexView.text = centileService.formatCentile(getString(R.string.centileWeight), gender, age, Type.WEIGHT to weight)
+        centileHeightTexView.text = centileService.formatCentile(getString(R.string.centileHeight), gender, age, Type.HEIGHT to height)
+        centileBmiTexView.text = centileService.formatCentile(getString(R.string.centileBmi), gender, age, Type.BMI to bmi)
         saveInputs()
         saveButton.visibility = View.VISIBLE
         calculateButton.visibility = View.GONE
@@ -202,10 +201,6 @@ class MainActivity : AppCompatActivity() {
         val birthDate = SimpleDateFormat("dd.MM.yyyy").parse(date).time
         val days = Date().time.minus(birthDate) / (1000 * 3600 * 24)
         return (days / 30.5f).roundToInt() // average days in months
-    }
-
-    private fun getResult(result: Int): String {
-        return if (result > -1) result.toString() else getString(R.string.noDataForThisAgeLong)
     }
 
     private fun getToday(startWithYear: Boolean): String {

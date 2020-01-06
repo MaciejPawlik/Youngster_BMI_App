@@ -12,7 +12,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class ControlServiceTest {
     val context = ApplicationProvider.getApplicationContext<Context>()
-    val centileService = CentileService(context)
+    val centileService = CentileService(context, context.getString(R.string.noDataForThisAgeLong))
     val resultFileName = context.getString(R.string.resultsFile)
     val noDataMessage = context.getString(R.string.noDataForThisAgeShort)
     val tested = ControlService(centileService, resultFileName, context.getString(R.string.noDataForThisAgeShort))
