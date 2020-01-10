@@ -32,7 +32,7 @@ class CentileServiceTest {
     @Test
     fun formatCentiles() {
         val result = tested.formatCentile(context.getString(R.string.centileHeight), Gender.BOY, 60, Type.HEIGHT to 108.5)
-        val expected = "Centyl wzrost: 25"
+        val expected = context.getString(R.string.centileHeight).plus(": 25")
         assertEquals(expected, result)
     }
 }
