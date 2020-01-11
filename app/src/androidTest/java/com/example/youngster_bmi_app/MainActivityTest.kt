@@ -11,25 +11,38 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
+import com.example.youngster_bmi_app.model.ControlCentile
+import com.example.youngster_bmi_app.model.Gender
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class MainActivityTest {
 
+    private val year = "10"
+    private val month = "10"
+    private val height = "141"
+    private val weight = "30"
+    private val bmi = "15,09"
+    private val childName = "James"
+    private val centileHeight = "25"
+    private val centileBmi = "10"
+
     private lateinit var context: Context
-    private lateinit var year: String
-    private lateinit var month: String
-    private lateinit var height: String
-    private lateinit var weight: String
-    private lateinit var childName: String
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var preferencesKeys: List<String>
+    private lateinit var expectedBmi: String
+    private lateinit var expectedCentileWeight: String
+    private lateinit var expectedCentileHeight: String
+    private lateinit var expectedCentileBmi: String
+    private lateinit var expectedControlCentile: ControlCentile
 
     @get:Rule
     val activityRule = ActivityTestRule(MainActivity::class.java)
@@ -37,11 +50,6 @@ class MainActivityTest {
     @Before
     fun setUp() {
         context = activityRule.activity.applicationContext
-        year = "10"
-        month = "10"
-        height = "141"
-        weight = "30"
-        childName = "James"
         sharedPreferences = activityRule.activity.getPreferences(Context.MODE_PRIVATE)
         preferencesKeys = listOf(
             R.id.genderRadioGroup.toString(),
@@ -51,6 +59,22 @@ class MainActivityTest {
             R.id.yearSpinner.toString(),
             R.id.monthSpinner.toString()
         )
+        expectedBmi = context.getString(R.string.BMI).plus(": ").plus(bmi)
+        expectedCentileWeight = context.getString(R.string.centileWeight).plus(": ").plus(context.getString(R.string.noDataForThisAgeLong))
+        expectedCentileHeight = context.getString(R.string.centileHeight).plus(": ").plus(centileHeight)
+        expectedCentileBmi = context.getString(R.string.centileBmi).plus(": ").plus(centileBmi)
+        expectedControlCentile = ControlCentile(
+            Gender.BOY.toString(),
+            year.plus("l. ").plus(month).plus("m."),
+            childName,
+            LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+            weight,
+            height,
+            bmi,
+            context.getString(R.string.noDataForThisAgeShort),
+            centileHeight,
+            centileBmi
+            )
     }
 
     @After
@@ -111,16 +135,16 @@ class MainActivityTest {
 
         //results:
         onView(withId(R.id.BMITextView))
-            .check(matches(withText(context.getString(R.string.BMI).plus(": ").plus("15,09"))))
+            .check(matches(withText(expectedBmi)))
 
         onView(withId(R.id.centileWeightTextView))
-            .check(matches(withText(context.getString(R.string.centileWeight).plus(": ").plus(context.getString(R.string.noDataForThisAgeLong)))))
+            .check(matches(withText(expectedCentileWeight)))
 
         onView(withId(R.id.centileHeightTextView))
-            .check(matches(withText(context.getString(R.string.centileHeight).plus(": ").plus("25"))))
+            .check(matches(withText(expectedCentileHeight)))
 
         onView(withId(R.id.centileBmiTextView))
-            .check(matches(withText(context.getString(R.string.centileBmi).plus(": ").plus("10"))))
+            .check(matches(withText(expectedCentileBmi)))
 
         onView(withId(R.id.calculateButton))
             .check(matches(not(isDisplayed())))
@@ -143,10 +167,12 @@ class MainActivityTest {
             .check(matches(not(isDisplayed())))
 
         onView(withId(R.id.calculateButton))
-            .check(matches(not(isDisplayed())))
+            .check(matches(isDisplayed()))
 
         //open results:
         onView(withId(R.id.listResultsButton))
             .perform(click())
+
+        onData(allOf(`is`(instanceOf(ControlCentile::class.java)), hasItem(expectedControlCentile)))
     }
 }
