@@ -293,7 +293,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/calculateButton"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                android:visibility="gone"/>
 
         <TextView
                 android:text="@string/centileWeight"
@@ -304,7 +305,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/BMITextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                android:visibility="gone"/>
 
         <TextView
                 android:text="@string/centileHeight"
@@ -315,7 +317,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/centileWeightTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                android:visibility="gone"/>
 
         <TextView
                 android:text="@string/centileBmi"
@@ -326,7 +329,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/centileHeightTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                android:visibility="gone"/>
 
         <Button
                 android:text="@string/save"

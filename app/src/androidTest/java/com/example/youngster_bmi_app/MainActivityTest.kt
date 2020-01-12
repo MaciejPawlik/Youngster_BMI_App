@@ -135,15 +135,19 @@ class MainActivityTest {
 
         //results:
         onView(withId(R.id.BMITextView))
+            .check(matches(isDisplayed()))
             .check(matches(withText(expectedBmi)))
 
         onView(withId(R.id.centileWeightTextView))
+            .check(matches(isDisplayed()))
             .check(matches(withText(expectedCentileWeight)))
 
         onView(withId(R.id.centileHeightTextView))
+            .check(matches(isDisplayed()))
             .check(matches(withText(expectedCentileHeight)))
 
         onView(withId(R.id.centileBmiTextView))
+            .check(matches(isDisplayed()))
             .check(matches(withText(expectedCentileBmi)))
 
         onView(withId(R.id.calculateButton))
@@ -167,6 +171,10 @@ class MainActivityTest {
             .check(matches(not(isDisplayed())))
 
         onView(withId(R.id.calculateButton))
+            .check(matches(isDisplayed()))
+
+        onView(withSubstring(context.getString(R.string.resultsSaved)))
+            .inRoot(withDecorView(not(`is`(activityRule.activity.window.decorView))))
             .check(matches(isDisplayed()))
 
         //open results:

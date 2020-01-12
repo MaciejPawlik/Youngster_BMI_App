@@ -167,6 +167,10 @@ class MainActivity : AppCompatActivity() {
         saveInputs()
         saveButton.visibility = View.VISIBLE
         calculateButton.visibility = View.GONE
+        bmiTexView.visibility = View.VISIBLE
+        centileHeightTexView.visibility = View.VISIBLE
+        centileWeightTexView.visibility = View.VISIBLE
+        centileBmiTexView.visibility = View.VISIBLE
     }
 
     private fun saveInputs() {
