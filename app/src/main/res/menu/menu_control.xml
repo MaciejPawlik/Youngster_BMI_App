@@ -1,10 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.example.youngster_bmi_app.ControlResultFragment">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
+            android:id="@+id/resultListIcon"
+            android:title="@string/action_settings"
+            android:orderInCategory="1"
+            app:showAsAction="ifRoom"
+            android:icon="?attr/actionModePasteDrawable"
+            />
+    <!--<item
             android:id="@+id/action_settings"
             android:title="@string/action_settings"
             android:orderInCategory="100"
-            app:showAsAction="never"/>
+            app:showAsAction="never"/>-->
 </menu>

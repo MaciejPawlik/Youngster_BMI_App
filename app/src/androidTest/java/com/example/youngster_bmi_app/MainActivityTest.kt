@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -88,8 +89,8 @@ class MainActivityTest {
 
     @Test
     fun checkInitialStateAndToastMessage() {
-        onView(withId(R.id.listResultsButton))
-            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.resultListIcon))
+            .check(doesNotExist())
 
         onView(withId(R.id.saveResultsButton))
             .check(matches(not(isDisplayed())))
@@ -178,7 +179,7 @@ class MainActivityTest {
             .check(matches(isDisplayed()))
 
         //open results:
-        onView(withId(R.id.listResultsButton))
+        onView(withId(R.id.resultListIcon))
             .perform(click())
 
         onData(allOf(`is`(instanceOf(ControlCentile::class.java)), hasItem(expectedControlCentile)))

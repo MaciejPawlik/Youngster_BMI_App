@@ -18,6 +18,9 @@ class ResultListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result_list)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         centileService = CentileService(applicationContext, getString(R.string.noDataForThisAgeLong))
         controlService = ControlService(centileService, getString(R.string.resultsFile), getString(R.string.noDataForThisAgeShort))
         resultsRecyclerView = findViewById(R.id.resultsRecyclerView)

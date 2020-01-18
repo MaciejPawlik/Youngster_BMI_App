@@ -1,368 +1,369 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <fragment
+            android:name="com.example.youngster_bmi_app.ToolbarFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/main">
+            android:id="@+id/toolbarFragmentMainActivity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <RadioGroup
-                android:text="@string/gender"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/genderRadioGroup"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintHorizontal_bias="0.5"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginRight="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/ageRadioGroup">
-
-            <RadioButton
-                    android:text="@string/Girl"
-                    android:checked="true"
-                    android:hint="@string/GIRL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/GIRL"
-                    android:layout_weight="1"/>
-
-            <RadioButton
-                    android:text="@string/Boy"
-                    android:hint="@string/BOY"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/BOY"
-                    android:layout_weight="1"/>
-        </RadioGroup>
-
-        <RadioGroup
-                android:text="@string/age"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ageRadioGroup"
-                app:layout_constraintHorizontal_bias="0.5"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginRight="16dp"
-                app:layout_constraintStart_toEndOf="@+id/genderRadioGroup"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="16dp">
-
-            <RadioButton
-                    android:text="@string/age"
-                    android:onClick="toggleAgeInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/monthYears"
-                    android:layout_weight="1"
-                    android:checked="true"/>
-
-            <RadioButton
-                    android:text="@string/birthDate"
-                    android:onClick="toggleAgeInput"
-                    android:checked="false"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/birthDate"
-                    android:layout_weight="1"/>
-
-        </RadioGroup>
-
-        <EditText
-                android:hint="@string/childName"
-                android:layout_width="260dp"
-                android:layout_height="60dp"
-                android:inputType="textPersonName"
-                android:id="@+id/childNameEditText"
-                android:importantForAutofill="no"
-                app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup"
-                android:layout_marginStart="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:orientation="horizontal"
-                android:layout_width="379dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/childNameEditText"
-                android:id="@+id/linearLayoutBirth"
-                android:visibility="gone">
-
-            <TextView
-                    android:text="@string/labelBirthDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/pickedDateTextView"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/pickedDateTextView"
-                    android:baselineAligned="false"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/datePicker"/>
-
-            <Button
-                    android:text="@string/setBirthDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/datePicker"
-                    android:onClick="showDatePickerDialog"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/pickedDateTextView"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/linearLayoutAge"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutBirth"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp">
-
-            <TextView
-                    android:text="@string/labelAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/labelAge"
-                    android:baselineAligned="false"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/yearSpinner"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/yearSpinner"
-                    app:layout_constraintStart_toEndOf="@+id/labelAge"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/monthSpinner"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/monthSpinner"
-                    android:baselineAligned="false"
-                    app:layout_constraintStart_toEndOf="@+id/yearSpinner"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            tools:context=".MainActivity"
+            android:id="@+id/mainScrollView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutAge"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:id="@+id/linearLayoutWeightHeight">
+                android:layout_height="wrap_content"
+                android:id="@+id/main">
 
-            <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:inputType="numberDecimal"
-                    android:id="@+id/heightEditText"
-                    android:importantForAutofill="no"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/heightTextView"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    />
-
-            <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:inputType="numberDecimal"
-                    android:id="@+id/weightEditText"
-                    android:importantForAutofill="no"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/weightTextView"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/heightTextView"/>
-
-            <TextView
-                    android:text="@string/weight"
+            <RadioGroup
+                    android:text="@string/gender"
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/weightTextView"
+                    android:id="@+id/genderRadioGroup"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/weightEditText"/>
-
-            <TextView
-                    android:text="@string/height"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/heightTextView"
-                    app:layout_constraintStart_toEndOf="@+id/weightEditText"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/heightEditText"/>
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintEnd_toStartOf="@+id/ageRadioGroup">
+
+                <RadioButton
+                        android:text="@string/Girl"
+                        android:checked="true"
+                        android:hint="@string/GIRL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/GIRL"
+                        android:layout_weight="1"/>
+
+                <RadioButton
+                        android:text="@string/Boy"
+                        android:hint="@string/BOY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/BOY"
+                        android:layout_weight="1"/>
+            </RadioGroup>
+
+            <RadioGroup
+                    android:text="@string/age"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ageRadioGroup"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/genderRadioGroup"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="16dp">
+
+                <RadioButton
+                        android:text="@string/age"
+                        android:onClick="toggleAgeInput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/monthYears"
+                        android:layout_weight="1"
+                        android:checked="true"/>
+
+                <RadioButton
+                        android:text="@string/birthDate"
+                        android:onClick="toggleAgeInput"
+                        android:checked="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/birthDate"
+                        android:layout_weight="1"/>
+
+            </RadioGroup>
+
+            <EditText
+                    android:hint="@string/childName"
+                    android:layout_width="260dp"
+                    android:layout_height="60dp"
+                    android:inputType="textPersonName"
+                    android:id="@+id/childNameEditText"
+                    android:importantForAutofill="no"
+                    app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:orientation="horizontal"
+                    android:layout_width="379dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/childNameEditText"
+                    android:id="@+id/linearLayoutBirth"
+                    android:visibility="gone">
+
+                <TextView
+                        android:text="@string/labelBirthDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/pickedDateTextView"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pickedDateTextView"
+                        android:baselineAligned="false"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/datePicker"/>
+
+                <Button
+                        android:text="@string/setBirthDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/datePicker"
+                        android:onClick="showDatePickerDialog"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/pickedDateTextView"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linearLayoutAge"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutBirth"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp">
+
+                <TextView
+                        android:text="@string/labelAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/labelAge"
+                        android:baselineAligned="false"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/yearSpinner"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/yearSpinner"
+                        app:layout_constraintStart_toEndOf="@+id/labelAge"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/monthSpinner"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/monthSpinner"
+                        android:baselineAligned="false"
+                        app:layout_constraintStart_toEndOf="@+id/yearSpinner"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutAge"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/linearLayoutWeightHeight">
+
+                <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/heightEditText"
+                        android:importantForAutofill="no"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/heightTextView"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        />
+
+                <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/weightEditText"
+                        android:importantForAutofill="no"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/weightTextView"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/heightTextView"/>
+
+                <TextView
+                        android:text="@string/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/weightTextView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/weightEditText"/>
+
+                <TextView
+                        android:text="@string/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/heightTextView"
+                        app:layout_constraintStart_toEndOf="@+id/weightEditText"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toStartOf="@+id/heightEditText"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                    android:text="@string/go"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/calculateButton"
+                    android:onClick="calculateCentile"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayoutWeightHeight"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"/>
+
+            <TextView
+                    android:text="@string/BMI"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BMITextView"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/calculateButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"/>
+
+            <TextView
+                    android:text="@string/centileWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/centileWeightTextView"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/BMITextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"/>
+
+            <TextView
+                    android:text="@string/centileHeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/centileHeightTextView"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/centileWeightTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"/>
+
+            <TextView
+                    android:text="@string/centileBmi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/centileBmiTextView"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/centileHeightTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"/>
+
+            <Button
+                    android:text="@string/save"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/saveResultsButton"
+                    android:onClick="saveResults"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/centileBmiTextView"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-        <Button
-                android:text="@string/go"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/calculateButton"
-                android:onClick="calculateCentile"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutWeightHeight"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"/>
-
-        <TextView
-                android:text="@string/BMI"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/BMITextView"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/calculateButton"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:visibility="gone"/>
-
-        <TextView
-                android:text="@string/centileWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/centileWeightTextView"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/BMITextView"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:visibility="gone"/>
-
-        <TextView
-                android:text="@string/centileHeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/centileHeightTextView"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/centileWeightTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:visibility="gone"/>
-
-        <TextView
-                android:text="@string/centileBmi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/centileBmiTextView"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/centileHeightTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:visibility="gone"/>
-
-        <Button
-                android:text="@string/save"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/saveResultsButton"
-                android:onClick="saveResults"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/centileBmiTextView"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"/>
-
-        <Button
-                android:text="@string/listResults"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/listResultsButton"
-                android:onClick="listResults"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/saveResultsButton"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:visibility="visible"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</LinearLayout>

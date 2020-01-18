@@ -26,7 +26,6 @@
     <string name="noDataForThisAgeLong">brak danych dla tego wieku</string>
     <string name="noDataForThisAgeShort">b/d</string>
     <string name="resultsFile">results.csv</string>
-    <string name="listResults">Przeglądaj wyniki</string>
     <string-array name="year_array">
         <item>0</item>
         <item>1</item>
@@ -64,4 +63,7 @@
     <string name="title_activity_control">Control</string>
     <string name="action_settings">Settings</string>
     <string name="recordDate">Data zapisu</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

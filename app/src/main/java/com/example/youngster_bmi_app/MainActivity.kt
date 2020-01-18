@@ -3,6 +3,8 @@ package com.example.youngster_bmi_app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -23,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var calculateButton: Button
     private lateinit var saveButton: Button
-    private lateinit var listResultButton: Button
     private lateinit var yearSpinner: Spinner
     private lateinit var monthSpinner: Spinner
     private lateinit var ageRadioGroup: RadioGroup
@@ -38,15 +39,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileBmiTexView: TextView
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
+    private lateinit var listResultMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
+
         centileService = CentileService(applicationContext, getString(R.string.noDataForThisAgeLong))
         controlService = ControlService(centileService, getString(R.string.resultsFile), getString(R.string.noDataForThisAgeLong))
         calculateButton = findViewById(R.id.calculateButton)
         saveButton = findViewById(R.id.saveResultsButton)
-        listResultButton = findViewById(R.id.listResultsButton)
         ageRadioGroup = findViewById(R.id.ageRadioGroup)
         genderRadioGroup = findViewById(R.id.genderRadioGroup)
         heightEditText = findViewById(R.id.heightEditText)
@@ -57,11 +60,32 @@ class MainActivity : AppCompatActivity() {
         centileBmiTexView = findViewById(R.id.centileBmiTextView)
         centileHeightTexView = findViewById(R.id.centileHeightTextView)
         centileWeightTexView = findViewById(R.id.centileWeightTextView)
+
         updateSpinners()
         addOnInputChangeListeners()
         readLastInputs()
-        if (!controlService.isFileAvailableForReading()) listResultButton.visibility = View.GONE
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_control, menu)
+        if (!controlService.isFileAvailableForReading()) menu?.findItem(R.id.resultListIcon)?.isVisible = false
+        listResultMenuItem = menu?.findItem(R.id.resultListIcon)!!
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.resultListIcon -> {
+            startActivity(Intent(applicationContext, ResultListActivity::class.java))
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
+
 
     private fun updateSpinners() {
         yearSpinner = findViewById(R.id.yearSpinner)
@@ -231,7 +255,7 @@ class MainActivity : AppCompatActivity() {
             controlService.saveControlResults(results)
             saveResultsButton.visibility = View.GONE
             closeKeyboard(view)
-            listResultButton.visibility = View.VISIBLE
+            listResultMenuItem.isVisible = true
             Toast.makeText(applicationContext, R.string.resultsSaved, LENGTH_SHORT).show()
         } catch (e: IOException) {
             Toast.makeText(applicationContext, R.string.resultsNotSaved, LENGTH_SHORT).show()
@@ -241,10 +265,5 @@ class MainActivity : AppCompatActivity() {
     fun showDatePickerDialog(view: View) {
         val datePicker = DatePickerFragment()
         datePicker.show(supportFragmentManager, "datePicker")
-    }
-
-    fun listResults(view: View) {
-        val resultListIntent = Intent(applicationContext, ResultListActivity::class.java)
-        startActivity(resultListIntent)
     }
 }
