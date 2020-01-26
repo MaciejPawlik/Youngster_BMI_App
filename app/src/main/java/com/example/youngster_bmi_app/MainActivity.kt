@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_control, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         if (!controlService.isFileAvailableForReading()) menu?.findItem(R.id.resultListIcon)?.isVisible = false
         listResultMenuItem = menu?.findItem(R.id.resultListIcon)!!
         return super.onCreateOptionsMenu(menu)
@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
@@ -95,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             yearSpinner.adapter = adapter
         }
         monthSpinner = findViewById(R.id.monthSpinner)
-        ArrayAdapter.createFromResource(this, R.array.month_array, android.R.layout.simple_spinner_dropdown_item
+        ArrayAdapter.createFromResource(this, R.array.monthArray, android.R.layout.simple_spinner_dropdown_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             monthSpinner.adapter = adapter
@@ -144,7 +142,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             yearSpinner.setSelection(applicationContext.resources.getTextArray(R.array.year_array)
                 .indexOfFirst { year -> year == inputs.getString(R.id.yearSpinner.toString(), "0") })
-            monthSpinner.setSelection(applicationContext.resources.getTextArray(R.array.month_array)
+            monthSpinner.setSelection(applicationContext.resources.getTextArray(R.array.monthArray)
                 .indexOfFirst { month -> month == inputs.getString(R.id.monthSpinner.toString(), "0") })
         }
     }

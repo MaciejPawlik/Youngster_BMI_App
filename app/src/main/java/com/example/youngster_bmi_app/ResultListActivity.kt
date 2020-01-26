@@ -1,11 +1,16 @@
 package com.example.youngster_bmi_app
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youngster_bmi_app.impl.CentileService
 import com.example.youngster_bmi_app.impl.ControlService
+import java.io.File
 
 class ResultListActivity : AppCompatActivity() {
 
@@ -32,6 +37,34 @@ class ResultListActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_list_results, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.emailIcon -> {
+            composeEmail(arrayOf("maciejmpawlik@gmail.com"), "some")
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun composeEmail(addresses: Array<String>, subject: String) {
+        val attachment = File(applicationContext.filesDir, getString(R.string.resultsFile))
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:") // only email apps should handle this
+            putExtra(Intent.EXTRA_EMAIL, addresses)
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            //putExtra(Intent.EXTRA_STREAM, Uri.fromFile(attachment))
+        }
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
         }
     }
 }

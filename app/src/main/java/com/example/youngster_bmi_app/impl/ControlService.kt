@@ -11,7 +11,7 @@ class ControlService(
 ) {
 
     fun isFileAvailableForReading(): Boolean {
-        return File(centileService.context.filesDir.path.plus("/").plus(fileNameResults)).canRead()
+        return File(centileService.context.filesDir, fileNameResults).canRead()
     }
 
     fun saveControlResults(results: Array<String>) {

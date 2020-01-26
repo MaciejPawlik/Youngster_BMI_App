@@ -47,7 +47,7 @@
         <item>18</item>
         <item>19</item>
     </string-array>
-    <string-array name="month_array">
+    <string-array name="monthArray">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -60,10 +60,9 @@
         <item>10</item>
         <item>11</item>
     </string-array>
-    <string name="title_activity_control">Control</string>
-    <string name="action_settings">Settings</string>
+    <string name="titleActivityControl">Control</string>
     <string name="recordDate">Data zapisu</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="resultListToolbarLabel">Wyniki</string>
+    <string name="actionResult">Wyniki</string>
+    <string name="actionEmail">Email</string>
 </resources>
