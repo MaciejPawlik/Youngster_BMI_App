@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider.getUriForFile
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youngster_bmi_app.impl.CentileService
@@ -47,7 +48,7 @@ class ResultListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.emailIcon -> {
-            composeEmail(arrayOf("maciejmpawlik@gmail.com"), "some")
+            composeEmail()
             true
         }
         else -> {
@@ -55,13 +56,13 @@ class ResultListActivity : AppCompatActivity() {
         }
     }
 
-    fun composeEmail(addresses: Array<String>, subject: String) {
+    private fun composeEmail() {
         val attachment = File(applicationContext.filesDir, getString(R.string.resultsFile))
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:") // only email apps should handle this
-            putExtra(Intent.EXTRA_EMAIL, addresses)
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-            //putExtra(Intent.EXTRA_STREAM, Uri.fromFile(attachment))
+        val uri = getUriForFile(applicationContext, "com.example.youngster_bmi_app.fileprovider", attachment)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            data = uri
+            putExtra(Intent.EXTRA_STREAM, uri)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)

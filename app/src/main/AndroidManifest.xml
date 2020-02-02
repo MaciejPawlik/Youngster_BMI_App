@@ -15,7 +15,7 @@
                 android:label="@string/resultListToolbarLabel"
                 android:parentActivityName=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SENDTO" />
+                <action android:name="android.intent.action.SEND" />
                 <data android:scheme="mailto" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -26,6 +26,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="com.example.youngster_bmi_app.fileprovider"
+                android:grantUriPermissions="true"
+                android:exported="false">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
