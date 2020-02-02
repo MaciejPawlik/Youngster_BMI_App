@@ -40,13 +40,14 @@ class ResultListActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
 
-        when (intent?.action) {
+        //todo
+        /*when (intent?.action) {
             Intent.ACTION_SEND -> {
                 if ("text/csv" == intent.type) {
                     handleSendResults(intent)
                 }
             }
-        }
+        }*/
     }
 
     private fun handleSendResults(intent: Intent) {
