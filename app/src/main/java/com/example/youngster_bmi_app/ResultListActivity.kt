@@ -1,8 +1,8 @@
 package com.example.youngster_bmi_app
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +39,22 @@ class ResultListActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                if ("text/csv" == intent.type) {
+                    handleSendResults(intent)
+                }
+            }
+        }
     }
+
+    private fun handleSendResults(intent: Intent) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? List<String>)?.let {
+            viewAdapter = ControlRecyclerViewAdapter(controlService.readResultsFromInput(it))
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_list_results, menu)

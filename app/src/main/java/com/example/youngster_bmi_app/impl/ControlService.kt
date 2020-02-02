@@ -26,6 +26,25 @@ class ControlService(
         return readResults().map { it.toControlCentile(standards) }
     }
 
+    fun readResultsFromInput(input: List<String>): List<ControlCentile> {
+        val standards = centileService.getCentiles()
+        val results = mutableListOf<Control>()
+        for (line in input) {
+            val dataField = line.split(",")
+            results.add(
+                Control(
+                    dataField[0],
+                    dataField[1],
+                    dataField[2],
+                    dataField[3],
+                    dataField[4],
+                    dataField[5]
+                )
+            )
+        }
+        return results.map { it.toControlCentile(standards) }
+    }
+
     private fun Control.toControlCentile(standards: List<Standard>) = ControlCentile(
         gender = gender,
         age = formatAge(age.toInt()),
