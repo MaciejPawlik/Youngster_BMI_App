@@ -1,8 +1,8 @@
 package com.example.youngster_bmi_app
 
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +20,7 @@ class ResultListActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
+    private lateinit var mailResultMenuItem: MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,33 +33,29 @@ class ResultListActivity : AppCompatActivity() {
         resultsRecyclerView = findViewById(R.id.resultsRecyclerView)
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ControlRecyclerViewAdapter(controlService.getControlResults())
+
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                if ("text/csv" == intent.type) {
+                    handleSendResults(intent)
+                }
+            }
+            else -> {
+                viewAdapter = ControlRecyclerViewAdapter(controlService.getControlResultsFromFile())
+            }
+        }
 
         resultsRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
-
-        //todo
-        /*when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                if ("text/csv" == intent.type) {
-                    handleSendResults(intent)
-                }
-            }
-        }*/
-    }
-
-    private fun handleSendResults(intent: Intent) {
-        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? List<String>)?.let {
-            viewAdapter = ControlRecyclerViewAdapter(controlService.readResultsFromInput(it))
-        }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_list_results, menu)
+        mailResultMenuItem = menu?.findItem(R.id.emailIcon)!!
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -69,6 +66,12 @@ class ResultListActivity : AppCompatActivity() {
         }
         else -> {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun handleSendResults(intent: Intent) {
+        (ClipData(intent.clipData).getItemAt(0).coerceToText(applicationContext).lines())?.let {
+            viewAdapter = ControlRecyclerViewAdapter(controlService.readResultsFromInput(it))
         }
     }
 

@@ -21,9 +21,8 @@ class ControlService(
         }
     }
 
-    fun getControlResults(): List<ControlCentile> {
-        val standards = centileService.getCentiles()
-        return readResults().map { it.toControlCentile(standards) }
+    fun getControlResultsFromFile(): List<ControlCentile> {
+        return readResultsFromInput(centileService.context.openFileInput(fileNameResults).bufferedReader().readLines())
     }
 
     fun readResultsFromInput(input: List<String>): List<ControlCentile> {
@@ -70,25 +69,5 @@ class ControlService(
             else -> years.toString().plus("l. ")
         }
         return yearsFormatted.plus(months.toString().plus("m."))
-    }
-
-    private fun readResults(): List<Control> {
-        val results = mutableListOf<Control>()
-        val reader = centileService.context.openFileInput(fileNameResults).bufferedReader()
-        for (line in reader.readLines()) {
-            val dataField = line.split(",")
-            results.add(
-                Control(
-                    dataField[0],
-                    dataField[1],
-                    dataField[2],
-                    dataField[3],
-                    dataField[4],
-                    dataField[5]
-                )
-            )
-        }
-        reader.close()
-        return results
     }
 }
