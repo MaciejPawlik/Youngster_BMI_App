@@ -21,6 +21,7 @@ class ResultListActivity : AppCompatActivity() {
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
     private lateinit var mailResultMenuItem: MenuItem
+    private var isResultsMailingAllowed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class ResultListActivity : AppCompatActivity() {
                 }
             }
             else -> {
+                isResultsMailingAllowed = true
                 viewAdapter = ControlRecyclerViewAdapter(controlService.getControlResultsFromFile())
             }
         }
@@ -52,10 +54,10 @@ class ResultListActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_list_results, menu)
         mailResultMenuItem = menu?.findItem(R.id.emailIcon)!!
+        mailResultMenuItem.isVisible = isResultsMailingAllowed
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -70,7 +72,7 @@ class ResultListActivity : AppCompatActivity() {
     }
 
     private fun handleSendResults(intent: Intent) {
-        (ClipData(intent.clipData).getItemAt(0).coerceToText(applicationContext).lines())?.let {
+        (ClipData(intent.clipData).getItemAt(0).coerceToText(applicationContext).lines()).let {
             viewAdapter = ControlRecyclerViewAdapter(controlService.readResultsFromInput(it))
         }
     }

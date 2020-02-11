@@ -8,5 +8,5 @@
             android:orderInCategory="1"
             app:showAsAction="ifRoom"
             android:icon="@android:drawable/ic_dialog_email"
-            />
+            android:visible="false"/>
 </menu>
