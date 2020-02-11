@@ -11,6 +11,7 @@ import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.youngster_bmi_app.impl.CentileService
 import com.example.youngster_bmi_app.impl.ControlService
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
     private lateinit var listResultMenuItem: MenuItem
+    private var defaultTextViewColor: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +62,10 @@ class MainActivity : AppCompatActivity() {
         centileBmiTexView = findViewById(R.id.centileBmiTextView)
         centileHeightTexView = findViewById(R.id.centileHeightTextView)
         centileWeightTexView = findViewById(R.id.centileWeightTextView)
+        defaultTextViewColor = centileBmiTexView.currentTextColor
 
         updateSpinners()
-        addOnInputChangeListeners()
+        addOnChangeListeners()
         readLastInputs()
     }
 
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                gotToRecalculationState()
+                goToRecalculationState()
             }
         }
         monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -111,23 +114,34 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                gotToRecalculationState()
+                goToRecalculationState()
             }
         }
     }
 
-    private fun addOnInputChangeListeners() {
-        genderRadioGroup.setOnCheckedChangeListener { group, checkedId -> gotToRecalculationState() }
-        ageRadioGroup.setOnCheckedChangeListener { group, checkedId -> gotToRecalculationState() }
-        weightEditText.addTextChangedListener { gotToRecalculationState() }
-        heightEditText.addTextChangedListener { gotToRecalculationState() }
-        pickedDateTexView.addTextChangedListener { gotToRecalculationState() }
+    private fun addOnChangeListeners() {
+        genderRadioGroup.setOnCheckedChangeListener { group, checkedId -> goToRecalculationState() }
+        ageRadioGroup.setOnCheckedChangeListener { group, checkedId -> goToRecalculationState() }
+        weightEditText.addTextChangedListener { goToRecalculationState() }
+        heightEditText.addTextChangedListener { goToRecalculationState() }
+        pickedDateTexView.addTextChangedListener { goToRecalculationState() }
+        centileBmiTexView.addTextChangedListener { setOnTextViewChangeColor(centileBmiTextView) }
+        centileWeightTexView.addTextChangedListener { setOnTextViewChangeColor(centileWeightTextView) }
+        centileHeightTexView.addTextChangedListener { setOnTextViewChangeColor(centileHeightTextView) }
     }
 
-    private fun gotToRecalculationState() {
+    private fun goToRecalculationState() {
         if (calculateButton.visibility == View.GONE) {
             saveButton.visibility = View.GONE
             calculateButton.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setOnTextViewChangeColor(resultTextView: TextView) {
+        if (resources.getStringArray(R.array.resultsOK).toList().any { resultTextView.text.contains(it) }) {
+            resultTextView.setTextColor(defaultTextViewColor)
+        } else {
+            resultTextView.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
         }
     }
 

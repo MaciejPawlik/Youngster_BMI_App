@@ -65,4 +65,13 @@
     <string name="resultListToolbarLabel">Wyniki</string>
     <string name="actionResult">Wyniki</string>
     <string name="actionEmail">Email</string>
+    <string-array name="resultsOK">
+        <item>10</item>
+        <item>15</item>
+        <item>25</item>
+        <item>50</item>
+        <item>75</item>
+        <item>85</item>
+        <item>90</item>
+    </string-array>
 </resources>
