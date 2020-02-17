@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
     private lateinit var listResultMenuItem: MenuItem
-    private var defaultTextViewColor: Int = 0
+    private var defaultTextViewColor = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,11 +138,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setOnTextViewChangeColor(resultTextView: TextView) {
-        if (resources.getStringArray(R.array.resultsOK).toList().any { resultTextView.text.contains(it) }) {
-            resultTextView.setTextColor(defaultTextViewColor)
-        } else {
-            resultTextView.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-        }
+        val color = if (resources.getStringArray(R.array.resultsOK).toList().any { resultTextView.text.contains(it) })
+            defaultTextViewColor else ContextCompat.getColor(applicationContext, R.color.colorAccent)
+        resultTextView.setTextColor(color)
     }
 
     private fun readLastInputs() {
