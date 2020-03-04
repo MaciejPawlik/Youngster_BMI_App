@@ -2,11 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-            android:id="@+id/emailIcon"
-            android:title="@string/actionEmail"
-            android:orderInCategory="1"
-            app:showAsAction="ifRoom"
-            android:icon="@android:drawable/ic_dialog_email"
-            android:visible="false"/>
+    <group
+            android:id="@+id/resultsIconGroup"
+            android:visible="false">
+        <item
+                android:id="@+id/emailIcon"
+                android:title="@string/actionEmail"
+                android:orderInCategory="1"
+                app:showAsAction="ifRoom"
+                android:icon="@android:drawable/ic_dialog_email"
+                />
+        <item
+                android:id="@+id/deleteIcon"
+                android:title="@string/actionDelete"
+                android:orderInCategory="2"
+                app:showAsAction="ifRoom"
+                android:icon="@android:drawable/ic_delete"
+                />
+    </group>
 </menu>

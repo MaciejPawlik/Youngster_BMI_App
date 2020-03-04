@@ -9,7 +9,7 @@
     <string name="go">Wylicz</string>
     <string name="weight">Masa[kg]</string>
     <string name="height">Wzrost[cm]</string>
-    <string name="centileWeight">Centyl waga</string>
+    <string name="centileWeight">Centyl masa</string>
     <string name="centileHeight">Centyl wzrost</string>
     <string name="centileBmi">Centyl BMI</string>
     <string name="BMI">BMI</string>
@@ -65,6 +65,7 @@
     <string name="resultListToolbarLabel">Wyniki</string>
     <string name="actionResult">Wyniki</string>
     <string name="actionEmail">Email</string>
+    <string name="actionDelete">Usuń</string>
     <string-array name="resultsOK">
         <item>10</item>
         <item>15</item>
@@ -76,4 +77,7 @@
         <item>brak danych dla tego wieku</item>
         <item>b/d</item>
     </string-array>
+    <string name="deleteQuestion">Usunąć wszystko?</string>
+    <string name="yesAnswer">Tak</string>
+    <string name="noAnswer">Nie</string>
 </resources>

@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider.getUriForFile
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youngster_bmi_app.impl.CentileService
@@ -20,8 +22,7 @@ class ResultListActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var centileService: CentileService
     private lateinit var controlService: ControlService
-    private lateinit var mailResultMenuItem: MenuItem
-    private var isResultsMailingAllowed = false
+    private var isMyResultList = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,7 @@ class ResultListActivity : AppCompatActivity() {
                 }
             }
             else -> {
-                isResultsMailingAllowed = true
+                isMyResultList = true
                 viewAdapter = ControlRecyclerViewAdapter(controlService.getControlResultsFromFile())
             }
         }
@@ -51,19 +52,23 @@ class ResultListActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
+
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_list_results, menu)
-        mailResultMenuItem = menu?.findItem(R.id.emailIcon)!!
-        mailResultMenuItem.isVisible = isResultsMailingAllowed
+        menu?.setGroupVisible(R.id.resultsIconGroup, isMyResultList)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.emailIcon -> {
             composeEmail()
+            true
+        }
+        R.id.deleteIcon -> {
+            confirmDelete()
             true
         }
         else -> {
@@ -88,5 +93,10 @@ class ResultListActivity : AppCompatActivity() {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
+    }
+
+    private fun confirmDelete() {
+        val yesNoDialogFragment = YesNoDialogFragment()
+        yesNoDialogFragment.show(supportFragmentManager, "yesNo")
     }
 }
