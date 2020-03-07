@@ -16,10 +16,12 @@ import com.example.youngster_bmi_app.model.ControlCentile
 import com.example.youngster_bmi_app.model.Gender
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -105,7 +107,7 @@ class MainActivityTest {
 
     @Test
     fun calculateCentiles() {
-        assert(sharedPreferences.all.isEmpty())
+        assertTrue("Preferences are not empty", sharedPreferences.all.isEmpty())
 
        //action:
         onView(withId(R.id.BOY))
@@ -158,7 +160,7 @@ class MainActivityTest {
             .check(matches(isDisplayed()))
             .perform(click())
 
-        assert(sharedPreferences.all.keys.containsAll(preferencesKeys))
+        assertTrue("Missing preferences", sharedPreferences.all.keys.containsAll(preferencesKeys))
 
         //edit data:
         onView(withId(R.id.weightEditText))
@@ -183,5 +185,14 @@ class MainActivityTest {
             .perform(click())
 
         onData(allOf(`is`(instanceOf(ControlCentile::class.java)), hasItem(expectedControlCentile)))
+
+        //clear results:
+        onView(withId(R.id.deleteIcon))
+            .perform(click())
+
+        onView(withText(R.string.yesAnswer))
+            .perform(click())
+
+        assertTrue("File is present", !File(context.filesDir, context.getString(R.string.resultsFile)).exists())
     }
 }
